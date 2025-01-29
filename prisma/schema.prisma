@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Roles {
+  id     String  @id @default(uuid())
+  nombre String  @unique
+  usuarios Usuarios[]
+  rolesPermisos RolesPermisos[]
+}
+
+model Usuarios {
+  id          String   @id @default(uuid())
+  nombre      String
+  correo      String   @unique
+  contraseña  String
+  telefono    String?
+  rolId       String
+  estado      Boolean  @default(true)
+  fechaCreacion DateTime @default(now())
+
+  rol         Roles    @relation(fields: [rolId], references: [id])
+  reservas    Reservas[]
+  opiniones   Opiniones[]
+}
+
+model Agencias {
+  id             String  @id @default(uuid())
+  nombreComercial String
+  contacto       String
+  correo         String?
+  telefono       String
+  direccion      String
+  descuento      Decimal
+  reservas       Reservas[]
+}
+
+model Proveedores {
+  id          String  @id @default(uuid())
+  nombre      String
+  contacto    String
+  telefono    String
+  email       String
+  estado      Boolean @default(true)
+  fechaRegistro DateTime @default(now())
+
+  rutas       Rutas[]
+}
+
+model Rutas {
+  id             String  @id @default(uuid())
+  proveedorId    String
+  origen         String
+  destino        String
+  precioPorPersona Decimal
+  precioPrivado  Decimal
+
+  proveedor     Proveedores @relation(fields: [proveedorId], references: [id])
+  reservas     Reservas[]
+}
+
+model Reservas {
+  id                String  @id @default(uuid())
+  claveReserva      String
+  clienteId         String
+  agenciaId         String
+  rutaId            String
+  fechaServicio     DateTime
+  numeroPasajeros   Int
+  precioTotal       Decimal
+  estado           String
+  motivoCancelacion String?
+  fechaCreacion     DateTime @default(now())
+
+  cliente          Usuarios @relation(fields: [clienteId], references: [id])
+  agencia          Agencias @relation(fields: [agenciaId], references: [id])
+  ruta            Rutas @relation(fields: [rutaId], references: [id])
+  pagos           Pagos[]
+  opiniones       Opiniones[]
+  reservasServicios ReservasServiciosAdicionales[]
+}
+
+model ServiciosAdicionales {
+  id      String  @id @default(uuid())
+  nombre  String
+  precio  Decimal
+  reservasServicios ReservasServiciosAdicionales[]
+}
+
+model ReservasServiciosAdicionales {
+  reservaId          String
+  servicioAdicionalId String
+  cantidad          Int
+
+  reserva          Reservas @relation(fields: [reservaId], references: [id])
+  servicioAdicional ServiciosAdicionales @relation(fields: [servicioAdicionalId], references: [id])
+
+  @@id([reservaId, servicioAdicionalId])
+}
+
+model Pagos {
+  id         String  @id @default(uuid())
+  reservaId  String
+  metodoPago String
+  monto      Decimal
+  estado     String
+  fechaPago  DateTime
+
+  reserva    Reservas @relation(fields: [reservaId], references: [id])
+}
+
+model Opiniones {
+  id         String  @id @default(uuid())
+  reservaId  String
+  clienteId  String
+  puntuacion Int
+  comentario String
+  fechaCreacion DateTime @default(now())
+
+  reserva   Reservas @relation(fields: [reservaId], references: [id])
+  cliente   Usuarios @relation(fields: [clienteId], references: [id])
+}
+
+model Permisos {
+  id          String  @id @default(uuid())
+  nombre      String  @unique
+  descripcion String
+  rolesPermisos RolesPermisos[]
+}
+
+model RolesPermisos {
+  rolId      String
+  permisoId  String
+
+  rol        Roles @relation(fields: [rolId], references: [id])
+  permiso    Permisos @relation(fields: [permisoId], references: [id])
+
+  @@id([rolId, permisoId])
+}
