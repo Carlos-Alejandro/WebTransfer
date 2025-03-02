@@ -1,67 +1,67 @@
 import express from "express";
 import {
-  getUsuarios,
-  getUsuarioById,
-  createUsuario,
-  updateUsuario,
-  deleteUsuario
-} from "../controllers/usuarios.controller.js";
+  getProveedores,
+  getProveedorById,
+  createProveedor,
+  updateProveedor,
+  deleteProveedor
+} from "../controllers/proveedores.controller.js";
 
 const router = express.Router();
 
 /**
  * @swagger
  * tags:
- *   name: Usuarios
- *   description: Endpoints para la gestión de usuarios
+ *   name: Proveedores
+ *   description: Endpoints para la gestión de proveedores
  */
 
 /**
  * @swagger
- * /api/usuarios:
+ * /api/proveedores:
  *   get:
- *     summary: Obtener todos los usuarios
- *     tags: [Usuarios]
+ *     summary: Obtener todos los proveedores
+ *     tags: [Proveedores]
  *     responses:
  *       200:
- *         description: Lista de usuarios
+ *         description: Lista de proveedores
  *       500:
  *         description: Error interno del servidor
  */
-router.get("/", getUsuarios);
+router.get("/", getProveedores);
 
 /**
  * @swagger
- * /api/usuarios/{id}:
+ * /api/proveedores/{id}:
  *   get:
- *     summary: Obtener un usuario por ID
- *     tags: [Usuarios]
+ *     summary: Obtener un proveedor por ID
+ *     tags: [Proveedores]
  *     parameters:
  *       - in: path
  *         name: id
- *         description: ID del usuario
+ *         description: ID del proveedor
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Datos del usuario
+ *         description: Datos del proveedor
  *       404:
- *         description: Usuario no encontrado
+ *         description: Proveedor no encontrado
  *       500:
  *         description: Error interno del servidor
  */
-router.get("/:id", getUsuarioById);
+router.get("/:id", getProveedorById);
 
 /**
  * @swagger
- * /api/usuarios:
+ * /api/proveedores:
  *   post:
- *     summary: Crear un nuevo usuario
- *     tags: [Usuarios]
+ *     summary: Crear un nuevo proveedor
+ *     tags: [Proveedores]
  *     requestBody:
  *       required: true
- *       description: Datos del nuevo usuario
+ *       description: Datos del nuevo proveedor
  *       content:
  *         application/json:
  *           schema:
@@ -69,40 +69,42 @@ router.get("/:id", getUsuarioById);
  *             properties:
  *               nombre:
  *                 type: string
- *               correo:
- *                 type: string
- *               contrasena:
+ *               contacto:
  *                 type: string
  *               telefono:
  *                 type: string
- *               rolId:
+ *               email:
+ *                 type: string
+ *               direccion:
+ *                 type: string
+ *               indicaciones:
  *                 type: string
  *     responses:
  *       201:
- *         description: Usuario creado correctamente
+ *         description: Proveedor creado correctamente
  *       400:
  *         description: Datos inválidos
  *       500:
  *         description: Error interno del servidor
  */
-router.post("/", createUsuario);
+router.post("/", createProveedor);
 
 /**
  * @swagger
- * /api/usuarios/{id}:
+ * /api/proveedores/{id}:
  *   put:
- *     summary: Actualizar un usuario
- *     tags: [Usuarios]
+ *     summary: Actualizar un proveedor
+ *     tags: [Proveedores]
  *     parameters:
  *       - in: path
  *         name: id
- *         description: ID del usuario a actualizar
+ *         description: ID del proveedor a actualizar
  *         required: true
  *         schema:
  *           type: string
  *     requestBody:
  *       required: true
- *       description: Datos a actualizar del usuario
+ *       description: Datos a actualizar del proveedor
  *       content:
  *         application/json:
  *           schema:
@@ -110,43 +112,47 @@ router.post("/", createUsuario);
  *             properties:
  *               nombre:
  *                 type: string
- *               correo:
+ *               contacto:
  *                 type: string
  *               telefono:
  *                 type: string
- *               rolId:
+ *               email:
+ *                 type: string
+ *               direccion:
+ *                 type: string
+ *               indicaciones:
  *                 type: string
  *     responses:
  *       200:
- *         description: Usuario actualizado correctamente
+ *         description: Proveedor actualizado correctamente
  *       404:
- *         description: Usuario no encontrado
+ *         description: Proveedor no encontrado
  *       500:
  *         description: Error interno del servidor
  */
-router.put("/:id", updateUsuario);
+router.put("/:id", updateProveedor);
 
 /**
  * @swagger
- * /api/usuarios/{id}:
+ * /api/proveedores/{id}:
  *   delete:
- *     summary: Eliminar un usuario
- *     tags: [Usuarios]
+ *     summary: Eliminar un proveedor
+ *     tags: [Proveedores]
  *     parameters:
  *       - in: path
  *         name: id
- *         description: ID del usuario a eliminar
+ *         description: ID del proveedor a eliminar
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Usuario eliminado correctamente
+ *         description: Proveedor eliminado correctamente
  *       404:
- *         description: Usuario no encontrado
+ *         description: Proveedor no encontrado
  *       500:
  *         description: Error interno del servidor
  */
-router.delete("/:id", deleteUsuario);
+router.delete("/:id", deleteProveedor);
 
 export default router;

@@ -1,67 +1,67 @@
 import express from "express";
 import {
-  getRoles,
-  getRolById,
-  createRol,
-  updateRol,
-  deleteRol
-} from "../controllers/roles.controller.js";
+  getZonas,
+  getZonaById,
+  createZona,
+  updateZona,
+  deleteZona
+} from "../controllers/zonas.controller.js";
 
 const router = express.Router();
 
 /**
  * @swagger
  * tags:
- *   name: Roles
- *   description: Endpoints para la gestión de roles
+ *   name: Zonas
+ *   description: Endpoints para la gestión de zonas
  */
 
 /**
  * @swagger
- * /api/roles:
+ * /api/zonas:
  *   get:
- *     summary: Obtener todos los roles
- *     tags: [Roles]
+ *     summary: Obtener todas las zonas
+ *     tags: [Zonas]
  *     responses:
  *       200:
- *         description: Lista de roles
+ *         description: Lista de zonas
  *       500:
  *         description: Error interno del servidor
  */
-router.get("/", getRoles);
+router.get("/", getZonas);
 
 /**
  * @swagger
- * /api/roles/{id}:
+ * /api/zonas/{id}:
  *   get:
- *     summary: Obtener un rol por ID
- *     tags: [Roles]
+ *     summary: Obtener una zona por ID
+ *     tags: [Zonas]
  *     parameters:
  *       - in: path
  *         name: id
- *         description: ID del rol
+ *         description: ID de la zona
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Datos del rol
+ *         description: Datos de la zona
  *       404:
- *         description: Rol no encontrado
+ *         description: Zona no encontrada
  *       500:
  *         description: Error interno del servidor
  */
-router.get("/:id", getRolById);
+router.get("/:id", getZonaById);
 
 /**
  * @swagger
- * /api/roles:
+ * /api/zonas:
  *   post:
- *     summary: Crear un nuevo rol
- *     tags: [Roles]
+ *     summary: Crear una nueva zona
+ *     tags: [Zonas]
  *     requestBody:
  *       required: true
- *       description: Datos del nuevo rol
+ *       description: Datos de la nueva zona
  *       content:
  *         application/json:
  *           schema:
@@ -69,32 +69,34 @@ router.get("/:id", getRolById);
  *             properties:
  *               nombre:
  *                 type: string
+ *               estado:
+ *                 type: boolean
  *     responses:
  *       201:
- *         description: Rol creado correctamente
+ *         description: Zona creada correctamente
  *       400:
  *         description: Datos inválidos
  *       500:
  *         description: Error interno del servidor
  */
-router.post("/", createRol);
+router.post("/", createZona);
 
 /**
  * @swagger
- * /api/roles/{id}:
+ * /api/zonas/{id}:
  *   put:
- *     summary: Actualizar un rol
- *     tags: [Roles]
+ *     summary: Actualizar una zona
+ *     tags: [Zonas]
  *     parameters:
  *       - in: path
  *         name: id
- *         description: ID del rol a actualizar
+ *         description: ID de la zona a actualizar
  *         required: true
  *         schema:
  *           type: string
  *     requestBody:
  *       required: true
- *       description: Datos a actualizar del rol
+ *       description: Datos a actualizar de la zona
  *       content:
  *         application/json:
  *           schema:
@@ -102,37 +104,39 @@ router.post("/", createRol);
  *             properties:
  *               nombre:
  *                 type: string
+ *               estado:
+ *                 type: boolean
  *     responses:
  *       200:
- *         description: Rol actualizado correctamente
+ *         description: Zona actualizada correctamente
  *       404:
- *         description: Rol no encontrado
+ *         description: Zona no encontrada
  *       500:
  *         description: Error interno del servidor
  */
-router.put("/:id", updateRol);
+router.put("/:id", updateZona);
 
 /**
  * @swagger
- * /api/roles/{id}:
+ * /api/zonas/{id}:
  *   delete:
- *     summary: Eliminar un rol
- *     tags: [Roles]
+ *     summary: Eliminar una zona
+ *     tags: [Zonas]
  *     parameters:
  *       - in: path
  *         name: id
- *         description: ID del rol a eliminar
+ *         description: ID de la zona a eliminar
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Rol eliminado correctamente
+ *         description: Zona eliminada correctamente
  *       404:
- *         description: Rol no encontrado
+ *         description: Zona no encontrada
  *       500:
  *         description: Error interno del servidor
  */
-router.delete("/:id", deleteRol);
+router.delete("/:id", deleteZona);
 
 export default router;

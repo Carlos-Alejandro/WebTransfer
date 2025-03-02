@@ -1,67 +1,67 @@
 import express from "express";
 import {
-  getUsuarios,
-  getUsuarioById,
-  createUsuario,
-  updateUsuario,
-  deleteUsuario
-} from "../controllers/usuarios.controller.js";
+  getTemporadas,
+  getTemporadaById,
+  createTemporada,
+  updateTemporada,
+  deleteTemporada
+} from "../controllers/temporadas.controller.js";
 
 const router = express.Router();
 
 /**
  * @swagger
  * tags:
- *   name: Usuarios
- *   description: Endpoints para la gestión de usuarios
+ *   name: Temporadas
+ *   description: Endpoints para la gestión de temporadas
  */
 
 /**
  * @swagger
- * /api/usuarios:
+ * /api/temporadas:
  *   get:
- *     summary: Obtener todos los usuarios
- *     tags: [Usuarios]
+ *     summary: Obtener todas las temporadas
+ *     tags: [Temporadas]
  *     responses:
  *       200:
- *         description: Lista de usuarios
+ *         description: Lista de temporadas
  *       500:
  *         description: Error interno del servidor
  */
-router.get("/", getUsuarios);
+router.get("/", getTemporadas);
 
 /**
  * @swagger
- * /api/usuarios/{id}:
+ * /api/temporadas/{id}:
  *   get:
- *     summary: Obtener un usuario por ID
- *     tags: [Usuarios]
+ *     summary: Obtener una temporada por ID
+ *     tags: [Temporadas]
  *     parameters:
  *       - in: path
  *         name: id
- *         description: ID del usuario
+ *         description: ID de la temporada
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Datos del usuario
+ *         description: Datos de la temporada
  *       404:
- *         description: Usuario no encontrado
+ *         description: Temporada no encontrada
  *       500:
  *         description: Error interno del servidor
  */
-router.get("/:id", getUsuarioById);
+router.get("/:id", getTemporadaById);
 
 /**
  * @swagger
- * /api/usuarios:
+ * /api/temporadas:
  *   post:
- *     summary: Crear un nuevo usuario
- *     tags: [Usuarios]
+ *     summary: Crear una nueva temporada
+ *     tags: [Temporadas]
  *     requestBody:
  *       required: true
- *       description: Datos del nuevo usuario
+ *       description: Datos de la nueva temporada
  *       content:
  *         application/json:
  *           schema:
@@ -69,40 +69,38 @@ router.get("/:id", getUsuarioById);
  *             properties:
  *               nombre:
  *                 type: string
- *               correo:
+ *               fechaInicio:
  *                 type: string
- *               contrasena:
+ *               fechaFin:
  *                 type: string
- *               telefono:
- *                 type: string
- *               rolId:
- *                 type: string
+ *               estado:
+ *                 type: boolean
  *     responses:
  *       201:
- *         description: Usuario creado correctamente
+ *         description: Temporada creada correctamente
  *       400:
  *         description: Datos inválidos
  *       500:
  *         description: Error interno del servidor
  */
-router.post("/", createUsuario);
+router.post("/", createTemporada);
 
 /**
  * @swagger
- * /api/usuarios/{id}:
+ * /api/temporadas/{id}:
  *   put:
- *     summary: Actualizar un usuario
- *     tags: [Usuarios]
+ *     summary: Actualizar una temporada
+ *     tags: [Temporadas]
  *     parameters:
  *       - in: path
  *         name: id
- *         description: ID del usuario a actualizar
+ *         description: ID de la temporada a actualizar
  *         required: true
  *         schema:
  *           type: string
  *     requestBody:
  *       required: true
- *       description: Datos a actualizar del usuario
+ *       description: Datos a actualizar de la temporada
  *       content:
  *         application/json:
  *           schema:
@@ -110,43 +108,43 @@ router.post("/", createUsuario);
  *             properties:
  *               nombre:
  *                 type: string
- *               correo:
+ *               fechaInicio:
  *                 type: string
- *               telefono:
+ *               fechaFin:
  *                 type: string
- *               rolId:
- *                 type: string
+ *               estado:
+ *                 type: boolean
  *     responses:
  *       200:
- *         description: Usuario actualizado correctamente
+ *         description: Temporada actualizada correctamente
  *       404:
- *         description: Usuario no encontrado
+ *         description: Temporada no encontrada
  *       500:
  *         description: Error interno del servidor
  */
-router.put("/:id", updateUsuario);
+router.put("/:id", updateTemporada);
 
 /**
  * @swagger
- * /api/usuarios/{id}:
+ * /api/temporadas/{id}:
  *   delete:
- *     summary: Eliminar un usuario
- *     tags: [Usuarios]
+ *     summary: Eliminar una temporada
+ *     tags: [Temporadas]
  *     parameters:
  *       - in: path
  *         name: id
- *         description: ID del usuario a eliminar
+ *         description: ID de la temporada a eliminar
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Usuario eliminado correctamente
+ *         description: Temporada eliminada correctamente
  *       404:
- *         description: Usuario no encontrado
+ *         description: Temporada no encontrada
  *       500:
  *         description: Error interno del servidor
  */
-router.delete("/:id", deleteUsuario);
+router.delete("/:id", deleteTemporada);
 
 export default router;

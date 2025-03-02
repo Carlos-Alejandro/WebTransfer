@@ -8,137 +8,171 @@ datasource db {
 }
 
 model Roles {
-  id     String  @id @default(uuid())
-  nombre String  @unique
-  usuarios Usuarios[]
+  id            String          @id @default(uuid())
+  nombre        String          @unique
+  rolesPermisos RolesPermisos[]
+  usuarios      Usuarios[]
+}
+
+model RolesPermisos {
+  rolId     String
+  permisoId String
+  permiso   Permisos @relation(fields: [permisoId], references: [id])
+  rol       Roles    @relation(fields: [rolId], references: [id])
+
+  @@id([rolId, permisoId])
+}
+
+model Permisos {
+  id            String          @id @default(uuid())
+  nombre        String          @unique
+  descripcion   String
   rolesPermisos RolesPermisos[]
 }
 
 model Usuarios {
-  id          String   @id @default(uuid())
-  nombre      String
-  correo      String   @unique
-  contraseña  String
-  telefono    String?
-  rolId       String
-  estado      Boolean  @default(true)
-  fechaCreacion DateTime @default(now())
+  id            String      @id @default(uuid())
+  nombre        String
+  correo        String      @unique
+  contrasena    String
+  telefono      String?
+  rolId         String
+  estado        Boolean     @default(true)
+  fechaCreacion DateTime    @default(now())
+  opiniones     Opiniones[]
+  reservas      Reservas[]
+  rol           Roles       @relation(fields: [rolId], references: [id])
+}
 
-  rol         Roles    @relation(fields: [rolId], references: [id])
-  reservas    Reservas[]
-  opiniones   Opiniones[]
+model Opiniones {
+  id            String   @id @default(uuid())
+  reservaId     String
+  usuarioId     String
+  puntuacion    Int
+  comentario    String
+  fechaCreacion DateTime @default(now())
+  reserva       Reservas @relation(fields: [reservaId], references: [id])
+  usuario       Usuarios @relation(fields: [usuarioId], references: [id])
 }
 
 model Agencias {
-  id             String  @id @default(uuid())
+  id              String     @id @default(uuid())
   nombreComercial String
-  contacto       String
-  correo         String?
-  telefono       String
-  direccion      String
-  descuento      Decimal
-  reservas       Reservas[]
+  contacto        String
+  correo          String?
+  movil           String?
+  direccion       String
+  descuento       Decimal
+  urlLogo         String?
+  reservas        Reservas[]
 }
 
 model Proveedores {
-  id          String  @id @default(uuid())
-  nombre      String
-  contacto    String
-  telefono    String
-  email       String
-  estado      Boolean @default(true)
+  id            String   @id @default(uuid())
+  nombre        String
+  contacto      String
+  telefono      String
+  email         String
+  direccion     String
+  indicaciones  String?
+  estado        Boolean  @default(true)
   fechaRegistro DateTime @default(now())
-
-  rutas       Rutas[]
+  tarifas       Tarifas[]
 }
 
-model Rutas {
-  id             String  @id @default(uuid())
-  proveedorId    String
-  origen         String
-  destino        String
+model Tarifas {
+  id               String      @id @default(uuid())
+  proveedorId      String
+  zonaId           String
   precioPorPersona Decimal
-  precioPrivado  Decimal
-
-  proveedor     Proveedores @relation(fields: [proveedorId], references: [id])
-  reservas     Reservas[]
+  precioPrivado    Decimal
+  temporadaId      String
+  reservas         Reservas[]
+  proveedor        Proveedores @relation(fields: [proveedorId], references: [id])
+  temporada        Temporadas  @relation(fields: [temporadaId], references: [id])
+  zona             Zonas       @relation(fields: [zonaId], references: [id])
 }
 
 model Reservas {
-  id                String  @id @default(uuid())
-  claveReserva      String
-  clienteId         String
+  id                String                         @id @default(uuid())
+  folio             String
   agenciaId         String
-  rutaId            String
+  tarifaId          String
+  usuarioId         String
+  numeroVuelo       String
+  aerolinea         String
+  horarioLlegada    DateTime
+  correoCliente     String
+  telefonoCliente   String
+  hotelCliente      String
   fechaServicio     DateTime
   numeroPasajeros   Int
   precioTotal       Decimal
-  estado           String
+  tipoServicio      String
+  estado            String
   motivoCancelacion String?
-  fechaCreacion     DateTime @default(now())
-
-  cliente          Usuarios @relation(fields: [clienteId], references: [id])
-  agencia          Agencias @relation(fields: [agenciaId], references: [id])
-  ruta            Rutas @relation(fields: [rutaId], references: [id])
-  pagos           Pagos[]
-  opiniones       Opiniones[]
-  reservasServicios ReservasServiciosAdicionales[]
-}
-
-model ServiciosAdicionales {
-  id      String  @id @default(uuid())
-  nombre  String
-  precio  Decimal
+  fechaCreacion     DateTime                       @default(now())
+  opiniones         Opiniones[]
+  pagos             Pagos[]
+  agencia           Agencias                       @relation(fields: [agenciaId], references: [id])
+  tarifa            Tarifas                        @relation(fields: [tarifaId], references: [id])
+  usuario           Usuarios                       @relation(fields: [usuarioId], references: [id])
   reservasServicios ReservasServiciosAdicionales[]
 }
 
 model ReservasServiciosAdicionales {
-  reservaId          String
+  reservaId           String
   servicioAdicionalId String
-  cantidad          Int
-
-  reserva          Reservas @relation(fields: [reservaId], references: [id])
-  servicioAdicional ServiciosAdicionales @relation(fields: [servicioAdicionalId], references: [id])
+  cantidad            Int
+  reserva             Reservas             @relation(fields: [reservaId], references: [id])
+  servicioAdicional   ServiciosAdicionales @relation(fields: [servicioAdicionalId], references: [id])
 
   @@id([reservaId, servicioAdicionalId])
 }
 
+model ServiciosAdicionales {
+  id                String                         @id @default(uuid())
+  nombre            String
+  precio            Decimal
+  reservasServicios ReservasServiciosAdicionales[]
+}
+
 model Pagos {
-  id         String  @id @default(uuid())
+  id         String   @id @default(uuid())
   reservaId  String
   metodoPago String
   monto      Decimal
   estado     String
   fechaPago  DateTime
-
   reserva    Reservas @relation(fields: [reservaId], references: [id])
 }
 
-model Opiniones {
-  id         String  @id @default(uuid())
-  reservaId  String
-  clienteId  String
-  puntuacion Int
-  comentario String
-  fechaCreacion DateTime @default(now())
-
-  reserva   Reservas @relation(fields: [reservaId], references: [id])
-  cliente   Usuarios @relation(fields: [clienteId], references: [id])
+model Zonas {
+  id      String @id @default(uuid())
+  nombre  String
+  estado  Boolean @default(true)
+  tarifas Tarifas[]
+  ubicaciones Ubicaciones[]
 }
 
-model Permisos {
-  id          String  @id @default(uuid())
-  nombre      String  @unique
+model Ubicaciones {
+  id          String @id @default(uuid())
+  zonaId      String
+  nombre      String
+  direccion   String
+  latitudA    Float
+  longitudA   Float
+  latitudB    Float
+  longitudB   Float
   descripcion String
-  rolesPermisos RolesPermisos[]
+  zona        Zonas @relation(fields: [zonaId], references: [id])
 }
 
-model RolesPermisos {
-  rolId      String
-  permisoId  String
-
-  rol        Roles @relation(fields: [rolId], references: [id])
-  permiso    Permisos @relation(fields: [permisoId], references: [id])
-
-  @@id([rolId, permisoId])
+model Temporadas {
+  id          String   @id @default(uuid())
+  nombre      String
+  fechaInicio DateTime
+  fechaFin    DateTime
+  estado      Boolean  @default(true)
+  tarifas     Tarifas[]
 }

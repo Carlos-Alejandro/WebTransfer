@@ -1,67 +1,67 @@
 import express from "express";
 import {
-  getRoles,
-  getRolById,
-  createRol,
-  updateRol,
-  deleteRol
-} from "../controllers/roles.controller.js";
+  getPermisos,
+  getPermisoById,
+  createPermiso,
+  updatePermiso,
+  deletePermiso
+} from "../controllers/permisos.controller.js";
 
 const router = express.Router();
 
 /**
  * @swagger
  * tags:
- *   name: Roles
- *   description: Endpoints para la gestión de roles
+ *   name: Permisos
+ *   description: Endpoints para la gestión de permisos
  */
 
 /**
  * @swagger
- * /api/roles:
+ * /api/permisos:
  *   get:
- *     summary: Obtener todos los roles
- *     tags: [Roles]
+ *     summary: Obtener todos los permisos
+ *     tags: [Permisos]
  *     responses:
  *       200:
- *         description: Lista de roles
+ *         description: Lista de permisos
  *       500:
  *         description: Error interno del servidor
  */
-router.get("/", getRoles);
+router.get("/", getPermisos);
 
 /**
  * @swagger
- * /api/roles/{id}:
+ * /api/permisos/{id}:
  *   get:
- *     summary: Obtener un rol por ID
- *     tags: [Roles]
+ *     summary: Obtener un permiso por ID
+ *     tags: [Permisos]
  *     parameters:
  *       - in: path
  *         name: id
- *         description: ID del rol
+ *         description: ID del permiso
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Datos del rol
+ *         description: Datos del permiso
  *       404:
- *         description: Rol no encontrado
+ *         description: Permiso no encontrado
  *       500:
  *         description: Error interno del servidor
  */
-router.get("/:id", getRolById);
+router.get("/:id", getPermisoById);
 
 /**
  * @swagger
- * /api/roles:
+ * /api/permisos:
  *   post:
- *     summary: Crear un nuevo rol
- *     tags: [Roles]
+ *     summary: Crear un nuevo permiso
+ *     tags: [Permisos]
  *     requestBody:
  *       required: true
- *       description: Datos del nuevo rol
+ *       description: Datos del nuevo permiso
  *       content:
  *         application/json:
  *           schema:
@@ -69,32 +69,34 @@ router.get("/:id", getRolById);
  *             properties:
  *               nombre:
  *                 type: string
+ *               descripcion:
+ *                 type: string
  *     responses:
  *       201:
- *         description: Rol creado correctamente
+ *         description: Permiso creado correctamente
  *       400:
  *         description: Datos inválidos
  *       500:
  *         description: Error interno del servidor
  */
-router.post("/", createRol);
+router.post("/", createPermiso);
 
 /**
  * @swagger
- * /api/roles/{id}:
+ * /api/permisos/{id}:
  *   put:
- *     summary: Actualizar un rol
- *     tags: [Roles]
+ *     summary: Actualizar un permiso
+ *     tags: [Permisos]
  *     parameters:
  *       - in: path
  *         name: id
- *         description: ID del rol a actualizar
+ *         description: ID del permiso a actualizar
  *         required: true
  *         schema:
  *           type: string
  *     requestBody:
  *       required: true
- *       description: Datos a actualizar del rol
+ *       description: Datos a actualizar del permiso
  *       content:
  *         application/json:
  *           schema:
@@ -102,37 +104,39 @@ router.post("/", createRol);
  *             properties:
  *               nombre:
  *                 type: string
+ *               descripcion:
+ *                 type: string
  *     responses:
  *       200:
- *         description: Rol actualizado correctamente
+ *         description: Permiso actualizado correctamente
  *       404:
- *         description: Rol no encontrado
+ *         description: Permiso no encontrado
  *       500:
  *         description: Error interno del servidor
  */
-router.put("/:id", updateRol);
+router.put("/:id", updatePermiso);
 
 /**
  * @swagger
- * /api/roles/{id}:
+ * /api/permisos/{id}:
  *   delete:
- *     summary: Eliminar un rol
- *     tags: [Roles]
+ *     summary: Eliminar un permiso
+ *     tags: [Permisos]
  *     parameters:
  *       - in: path
  *         name: id
- *         description: ID del rol a eliminar
+ *         description: ID del permiso a eliminar
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Rol eliminado correctamente
+ *         description: Permiso eliminado correctamente
  *       404:
- *         description: Rol no encontrado
+ *         description: Permiso no encontrado
  *       500:
  *         description: Error interno del servidor
  */
-router.delete("/:id", deleteRol);
+router.delete("/:id", deletePermiso);
 
 export default router;
