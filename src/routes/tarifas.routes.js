@@ -1,11 +1,12 @@
-import express from "express";
+// src/routes/tarifas.routes.js
+import express from 'express';
+import { verifyToken } from '../middlewares/auth.middleware.js';
 import {
   getTarifas,
-  getTarifaById,
   createTarifa,
   updateTarifa,
-  deleteTarifa
-} from "../controllers/tarifas.controller.js";
+  deleteTarifa,
+} from '../controllers/tarifas.controller.js';
 
 const router = express.Router();
 
@@ -13,86 +14,122 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: Tarifas
- *   description: Endpoints para la gestión de tarifas
+ *   description: Endpoints para administrar tarifas
  */
 
 /**
  * @swagger
  * /api/tarifas:
  *   get:
- *     summary: Obtener todas las tarifas
+ *     summary: Obtiene la lista de tarifas
  *     tags: [Tarifas]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de tarifas
- *       500:
- *         description: Error interno del servidor
+ *         description: Tarifas obtenidas correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Tarifas obtenidas correctamente.
+ *                 data:
+ *                   type: array
  */
-router.get("/", getTarifas);
-
-/**
- * @swagger
- * /api/tarifas/{id}:
- *   get:
- *     summary: Obtener una tarifa por ID
- *     tags: [Tarifas]
- *     parameters:
- *       - in: path
- *         name: id
- *         description: ID de la tarifa
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Datos de la tarifa
- *       404:
- *         description: Tarifa no encontrada
- *       500:
- *         description: Error interno del servidor
- */
-router.get("/:id", getTarifaById);
+router.get('/', verifyToken, getTarifas);
 
 /**
  * @swagger
  * /api/tarifas:
  *   post:
- *     summary: Crear una nueva tarifa
+ *     summary: Crea una nueva tarifa
  *     tags: [Tarifas]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
- *       description: Datos de la nueva tarifa
  *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
- *               proveedorId:
- *                 type: string
- *               zonaId:
- *                 type: string
- *               precioPorPersona:
- *                 type: number
- *               precioPrivado:
- *                 type: number
  *               temporadaId:
  *                 type: string
+ *               proveedorId:
+ *                 type: string
+ *               zona1Id:
+ *                 type: string
+ *               zona2Id:
+ *                 type: string
+ *               SencilloIda1a3:
+ *                 type: number
+ *               SencilloIda4a5:
+ *                 type: number
+ *               SencilloIda6a8:
+ *                 type: number
+ *               SencilloIda9a10:
+ *                 type: number
+ *               SencilloIda11a12:
+ *                 type: number
+ *               SencilloIda13a16:
+ *                 type: number
+ *               SencilloReg1a3:
+ *                 type: number
+ *               SencilloReg4a5:
+ *                 type: number
+ *               SencilloReg6a8:
+ *                 type: number
+ *               SencilloReg9a10:
+ *                 type: number
+ *               SencilloReg11a12:
+ *                 type: number
+ *               SencilloReg13a16:
+ *                 type: number
+ *               Redondo1a3:
+ *                 type: number
+ *               Redondo4a5:
+ *                 type: number
+ *               Redondo6a8:
+ *                 type: number
+ *               Redondo9a10:
+ *                 type: number
+ *               Redondo11a12:
+ *                 type: number
+ *               Redondo13a16:
+ *                 type: number
  *     responses:
  *       201:
- *         description: Tarifa creada correctamente
- *       400:
- *         description: Datos inválidos
- *       500:
- *         description: Error interno del servidor
+ *         description: Tarifa creada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Tarifa creada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.post("/", createTarifa);
+router.post('/', verifyToken, createTarifa);
 
 /**
  * @swagger
  * /api/tarifas/{id}:
  *   put:
- *     summary: Actualizar una tarifa
+ *     summary: Actualiza una tarifa existente
  *     tags: [Tarifas]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -102,38 +139,82 @@ router.post("/", createTarifa);
  *           type: string
  *     requestBody:
  *       required: true
- *       description: Datos a actualizar de la tarifa
  *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
- *               proveedorId:
- *                 type: string
- *               zonaId:
- *                 type: string
- *               precioPorPersona:
- *                 type: number
- *               precioPrivado:
- *                 type: number
  *               temporadaId:
  *                 type: string
+ *               proveedorId:
+ *                 type: string
+ *               zona1Id:
+ *                 type: string
+ *               zona2Id:
+ *                 type: string
+ *               SencilloIda1a3:
+ *                 type: number
+ *               SencilloIda4a5:
+ *                 type: number
+ *               SencilloIda6a8:
+ *                 type: number
+ *               SencilloIda9a10:
+ *                 type: number
+ *               SencilloIda11a12:
+ *                 type: number
+ *               SencilloIda13a16:
+ *                 type: number
+ *               SencilloReg1a3:
+ *                 type: number
+ *               SencilloReg4a5:
+ *                 type: number
+ *               SencilloReg6a8:
+ *                 type: number
+ *               SencilloReg9a10:
+ *                 type: number
+ *               SencilloReg11a12:
+ *                 type: number
+ *               SencilloReg13a16:
+ *                 type: number
+ *               Redondo1a3:
+ *                 type: number
+ *               Redondo4a5:
+ *                 type: number
+ *               Redondo6a8:
+ *                 type: number
+ *               Redondo9a10:
+ *                 type: number
+ *               Redondo11a12:
+ *                 type: number
+ *               Redondo13a16:
+ *                 type: number
  *     responses:
  *       200:
- *         description: Tarifa actualizada correctamente
- *       404:
- *         description: Tarifa no encontrada
- *       500:
- *         description: Error interno del servidor
+ *         description: Tarifa actualizada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Tarifa actualizada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.put("/:id", updateTarifa);
+router.put('/:id', verifyToken, updateTarifa);
 
 /**
  * @swagger
  * /api/tarifas/{id}:
  *   delete:
- *     summary: Eliminar una tarifa
+ *     summary: Elimina una tarifa existente
  *     tags: [Tarifas]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -143,12 +224,21 @@ router.put("/:id", updateTarifa);
  *           type: string
  *     responses:
  *       200:
- *         description: Tarifa eliminada correctamente
- *       404:
- *         description: Tarifa no encontrada
- *       500:
- *         description: Error interno del servidor
+ *         description: Tarifa eliminada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Tarifa eliminada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.delete("/:id", deleteTarifa);
+router.delete('/:id', verifyToken, deleteTarifa);
 
 export default router;

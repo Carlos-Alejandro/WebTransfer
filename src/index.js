@@ -1,98 +1,55 @@
-import express from "express";
-import cors from "cors";
-import swaggerUi from "swagger-ui-express";
-import swaggerJSDoc from "swagger-jsdoc";
-import agenciasRoutes from "./routes/agencias.routes.js";
-import rolesRoutes from "./routes/roles.routes.js";
-import rolesPermisosRoutes from "./routes/rolesPermisos.routes.js";
-import permisosRoutes from "./routes/permisos.routes.js";
-import usuariosRoutes from "./routes/usuarios.routes.js";
-import opinionesRoutes from "./routes/opiniones.routes.js";
-import tarifasRoutes from "./routes/tarifas.routes.js";
-import reservasRoutes from "./routes/reservas.routes.js";
-import ubicacionesRoutes from "./routes/ubicaciones.routes.js";
-import zonasRoutes from "./routes/zonas.routes.js";
-import temporadasRoutes from "./routes/temporadas.routes.js";
-import proveedoresRoutes from "./routes/proveedores.routes.js";
-import pagosRoutes from "./routes/pagos.routes.js";
-import serviciosAdicionalesRoutes from "./routes/serviciosAdicionales.routes.js";
-import reservasServiciosAdicionalesRoutes from "./routes/reservasServiciosAdicionales.routes.js";
-
-// Variables de entorno y configuración de puerto
-const PORT = process.env.PORT || 3000;
+// src/index.js
+import express from 'express';
+import usuariosRoutes from './routes/usuarios.routes.js';
+import rolesRoutes from './routes/roles.routes.js';
+import permisosRoutes from './routes/permisos.routes.js';
+import rolesPermisosRoutes from './routes/rolesPermisos.routes.js';
+import opinionesRoutes from './routes/opiniones.routes.js';
+import agenciasRoutes from './routes/agencias.routes.js';
+import proveedoresRoutes from './routes/proveedores.routes.js';
+import tarifasRoutes from './routes/tarifas.routes.js';
+import reservasRoutes from './routes/reservas.routes.js';
+import reservasServiciosAdicionalesRoutes from './routes/reservasServiciosAdicionales.routes.js';
+import serviciosAdicionalesRoutes from './routes/serviciosAdicionales.routes.js';
+import pagosRoutes from './routes/pagos.routes.js';
+import zonasRoutes from './routes/zonas.routes.js';
+import ubicacionesRoutes from './routes/ubicaciones.routes.js';
+import rutasRoutes from './routes/rutas.routes.js';
+import temporadasRoutes from './routes/temporadas.routes.js';
+import cuponesRoutes from './routes/cupones.routes.js';
+import rutaCuponRoutes from './routes/rutaCupon.routes.js';
+import swaggerDocs from './swagger.js'; // Ajusta la ruta según la ubicación de swagger.js
 
 const app = express();
 
-// Configurar CORS (puedes personalizarlo según tus necesidades)
-const corsOptions = {
-  origin: "*",
-  methods: "GET,POST,PUT,DELETE",
-  allowedHeaders: "Content-Type,Authorization",
-};
-app.use(cors(corsOptions));
-
-// Para poder parsear JSON en las peticiones
 app.use(express.json());
 
-// Configuración de Swagger
-const swaggerOptions = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "API de Agencias, Roles, RolesPermisos, Permisos, Usuarios, Opiniones, Tarifas, Reservas, Ubicaciones, Zonas, Temporadas, Proveedores, Pagos y Servicios Adicionales",
-      version: "1.0.0",
-      description: "Documentación de la API con Swagger",
-    },
-    servers: [
-      {
-        url: "http://localhost:3000",
-        description: "Servidor Local",
-      },
-    ],
-  },
-  apis: [
-    "./src/routes/agencias.routes.js",
-    "./src/routes/roles.routes.js",
-    "./src/routes/rolesPermisos.routes.js",
-    "./src/routes/permisos.routes.js",
-    "./src/routes/usuarios.routes.js",
-    "./src/routes/opiniones.routes.js",
-    "./src/routes/tarifas.routes.js",
-    "./src/routes/reservas.routes.js",
-    "./src/routes/ubicaciones.routes.js",
-    "./src/routes/zonas.routes.js",
-    "./src/routes/temporadas.routes.js",
-    "./src/routes/proveedores.routes.js",
-    "./src/routes/pagos.routes.js",
-    "./src/routes/serviciosAdicionales.routes.js",
-    "./src/routes/reservasServiciosAdicionales.routes.js"
-  ],
-};
+// Rutas públicas (o protegidas, según tu necesidad)
+app.use('/api/roles', rolesRoutes);
+app.use('/api/permisos', permisosRoutes);
+app.use('/api/roles-permisos', rolesPermisosRoutes);
+app.use('/api/agencias', agenciasRoutes);
+app.use('/api/proveedores', proveedoresRoutes);
+app.use('/api/tarifas', tarifasRoutes);
+app.use('/api/reservas', reservasRoutes);
+app.use('/api/reservas-servicios-adicionales', reservasServiciosAdicionalesRoutes);
+app.use('/api/servicios-adicionales', serviciosAdicionalesRoutes);
+app.use('/api/pagos', pagosRoutes);
+app.use('/api/zonas', zonasRoutes);
+app.use('/api/ubicaciones', ubicacionesRoutes);
+app.use('/api/rutas', rutasRoutes);
+app.use('/api/temporadas', temporadasRoutes);
+app.use('/api/cupones', cuponesRoutes);
+app.use('/api/ruta-cupon', rutaCuponRoutes);
 
-const swaggerDocs = swaggerJSDoc(swaggerOptions);
+// Rutas protegidas para Usuarios, Opiniones, etc. (requieren token)
+app.use('/api/usuarios', usuariosRoutes);
+app.use('/api/opiniones', opinionesRoutes);
 
-// Montar Swagger UI en /api-docs
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-console.log("📄 Swagger UI disponible en http://localhost:3000/api-docs");
+// Inicializa Swagger
+swaggerDocs(app);
 
-// Montar las rutas con prefijo /api
-app.use("/api/agencias", agenciasRoutes);
-app.use("/api/roles", rolesRoutes);
-app.use("/api/roles-permisos", rolesPermisosRoutes);
-app.use("/api/permisos", permisosRoutes);
-app.use("/api/usuarios", usuariosRoutes);
-app.use("/api/opiniones", opinionesRoutes);
-app.use("/api/tarifas", tarifasRoutes);
-app.use("/api/reservas", reservasRoutes);
-app.use("/api/ubicaciones", ubicacionesRoutes);
-app.use("/api/zonas", zonasRoutes);
-app.use("/api/temporadas", temporadasRoutes);
-app.use("/api/proveedores", proveedoresRoutes);
-app.use("/api/pagos", pagosRoutes);
-app.use("/api/servicios-adicionales", serviciosAdicionalesRoutes);
-app.use("/api/reservas-servicios", reservasServiciosAdicionalesRoutes);
-
-// Iniciar el servidor
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
 });

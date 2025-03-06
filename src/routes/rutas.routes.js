@@ -1,33 +1,33 @@
-// src/routes/pagos.routes.js
+// src/routes/rutas.routes.js
 import express from 'express';
 import { verifyToken } from '../middlewares/auth.middleware.js';
 import {
-  getPagos,
-  createPago,
-  updatePago,
-  deletePago,
-} from '../controllers/pagos.controller.js';
+  getRutas,
+  createRuta,
+  updateRuta,
+  deleteRuta,
+} from '../controllers/rutas.controller.js';
 
 const router = express.Router();
 
 /**
  * @swagger
  * tags:
- *   name: Pagos
- *   description: Endpoints para administrar pagos
+ *   name: Rutas
+ *   description: Endpoints para administrar rutas
  */
 
 /**
  * @swagger
- * /api/pagos:
+ * /api/rutas:
  *   get:
- *     summary: Obtiene la lista de pagos
- *     tags: [Pagos]
+ *     summary: Obtiene la lista de rutas
+ *     tags: [Rutas]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Pagos obtenidos correctamente.
+ *         description: Rutas obtenidas correctamente.
  *         content:
  *           application/json:
  *             schema:
@@ -38,18 +38,18 @@ const router = express.Router();
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Pagos obtenidos correctamente.
+ *                   example: Rutas obtenidas correctamente.
  *                 data:
  *                   type: array
  */
-router.get('/', verifyToken, getPagos);
+router.get('/', verifyToken, getRutas);
 
 /**
  * @swagger
- * /api/pagos:
+ * /api/rutas:
  *   post:
- *     summary: Crea un nuevo pago
- *     tags: [Pagos]
+ *     summary: Crea una nueva ruta
+ *     tags: [Rutas]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -59,22 +59,17 @@ router.get('/', verifyToken, getPagos);
  *           schema:
  *             type: object
  *             properties:
- *               reservaId:
+ *               Ubicacion1:
  *                 type: string
- *               metodoPago:
+ *               Ubicacion2:
  *                 type: string
- *               monto:
+ *               TiempoTraslado:
  *                 type: number
- *               estado:
- *                 type: string
- *               fechaPago:
- *                 type: string
- *                 format: date-time
- *               voucher:
+ *               MapUrl:
  *                 type: string
  *     responses:
  *       201:
- *         description: Pago creado correctamente.
+ *         description: Ruta creada correctamente.
  *         content:
  *           application/json:
  *             schema:
@@ -85,24 +80,24 @@ router.get('/', verifyToken, getPagos);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Pago creado correctamente.
+ *                   example: Ruta creada correctamente.
  *                 data:
  *                   type: object
  */
-router.post('/', verifyToken, createPago);
+router.post('/', verifyToken, createRuta);
 
 /**
  * @swagger
- * /api/pagos/{id}:
+ * /api/rutas/{id}:
  *   put:
- *     summary: Actualiza un pago existente
- *     tags: [Pagos]
+ *     summary: Actualiza una ruta existente
+ *     tags: [Rutas]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         description: ID del pago a actualizar
+ *         description: ID de la ruta a actualizar
  *         required: true
  *         schema:
  *           type: string
@@ -113,22 +108,17 @@ router.post('/', verifyToken, createPago);
  *           schema:
  *             type: object
  *             properties:
- *               reservaId:
+ *               Ubicacion1:
  *                 type: string
- *               metodoPago:
+ *               Ubicacion2:
  *                 type: string
- *               monto:
+ *               TiempoTraslado:
  *                 type: number
- *               estado:
- *                 type: string
- *               fechaPago:
- *                 type: string
- *                 format: date-time
- *               voucher:
+ *               MapUrl:
  *                 type: string
  *     responses:
  *       200:
- *         description: Pago actualizado correctamente.
+ *         description: Ruta actualizada correctamente.
  *         content:
  *           application/json:
  *             schema:
@@ -139,30 +129,30 @@ router.post('/', verifyToken, createPago);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Pago actualizado correctamente.
+ *                   example: Ruta actualizada correctamente.
  *                 data:
  *                   type: object
  */
-router.put('/:id', verifyToken, updatePago);
+router.put('/:id', verifyToken, updateRuta);
 
 /**
  * @swagger
- * /api/pagos/{id}:
+ * /api/rutas/{id}:
  *   delete:
- *     summary: Elimina un pago existente
- *     tags: [Pagos]
+ *     summary: Elimina una ruta existente
+ *     tags: [Rutas]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         description: ID del pago a eliminar
+ *         description: ID de la ruta a eliminar
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Pago eliminado correctamente.
+ *         description: Ruta eliminada correctamente.
  *         content:
  *           application/json:
  *             schema:
@@ -173,10 +163,10 @@ router.put('/:id', verifyToken, updatePago);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Pago eliminado correctamente.
+ *                   example: Ruta eliminada correctamente.
  *                 data:
  *                   type: object
  */
-router.delete('/:id', verifyToken, deletePago);
+router.delete('/:id', verifyToken, deleteRuta);
 
 export default router;

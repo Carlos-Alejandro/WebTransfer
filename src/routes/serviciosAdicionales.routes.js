@@ -1,11 +1,12 @@
-import express from "express";
+// src/routes/serviciosAdicionales.routes.js
+import express from 'express';
+import { verifyToken } from '../middlewares/auth.middleware.js';
 import {
   getServiciosAdicionales,
-  getServicioAdicionalById,
   createServicioAdicional,
   updateServicioAdicional,
-  deleteServicioAdicional
-} from "../controllers/serviciosAdicionales.controller.js";
+  deleteServicioAdicional,
+} from '../controllers/serviciosAdicionales.controller.js';
 
 const router = express.Router();
 
@@ -13,55 +14,46 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: ServiciosAdicionales
- *   description: Endpoints para la gestión de servicios adicionales
+ *   description: Endpoints para administrar servicios adicionales
  */
 
 /**
  * @swagger
  * /api/servicios-adicionales:
  *   get:
- *     summary: Obtener todos los servicios adicionales
+ *     summary: Obtiene la lista de servicios adicionales
  *     tags: [ServiciosAdicionales]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de servicios adicionales
- *       500:
- *         description: Error interno del servidor
+ *         description: Servicios adicionales obtenidos correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Servicios adicionales obtenidos correctamente.
+ *                 data:
+ *                   type: array
  */
-router.get("/", getServiciosAdicionales);
-
-/**
- * @swagger
- * /api/servicios-adicionales/{id}:
- *   get:
- *     summary: Obtener un servicio adicional por ID
- *     tags: [ServiciosAdicionales]
- *     parameters:
- *       - in: path
- *         name: id
- *         description: ID del servicio adicional
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Datos del servicio adicional
- *       404:
- *         description: Servicio adicional no encontrado
- *       500:
- *         description: Error interno del servidor
- */
-router.get("/:id", getServicioAdicionalById);
+router.get('/', verifyToken, getServiciosAdicionales);
 
 /**
  * @swagger
  * /api/servicios-adicionales:
  *   post:
- *     summary: Crear un nuevo servicio adicional
+ *     summary: Crea un nuevo servicio adicional
  *     tags: [ServiciosAdicionales]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
- *       description: Datos del nuevo servicio adicional
  *       content:
  *         application/json:
  *           schema:
@@ -73,20 +65,31 @@ router.get("/:id", getServicioAdicionalById);
  *                 type: number
  *     responses:
  *       201:
- *         description: Servicio adicional creado correctamente
- *       400:
- *         description: Datos inválidos
- *       500:
- *         description: Error interno del servidor
+ *         description: Servicio adicional creado correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Servicio adicional creado correctamente.
+ *                 data:
+ *                   type: object
  */
-router.post("/", createServicioAdicional);
+router.post('/', verifyToken, createServicioAdicional);
 
 /**
  * @swagger
  * /api/servicios-adicionales/{id}:
  *   put:
- *     summary: Actualizar un servicio adicional
+ *     summary: Actualiza un servicio adicional existente
  *     tags: [ServiciosAdicionales]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -96,25 +99,66 @@ router.post("/", createServicioAdicional);
  *           type: string
  *     requestBody:
  *       required: true
- *       description: Datos a actualizar del servicio adicional
- *       content:\n         application/json:\n           schema:\n             type: object\n             properties:\n               nombre:\n                 type: string\n               precio:\n                 type: number\n     responses:\n       200:\n         description: Servicio adicional actualizado correctamente\n       404:\n         description: Servicio adicional no encontrado\n       500:\n         description: Error interno del servidor
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *               precio:
+ *                 type: number
+ *     responses:
+ *       200:
+ *         description: Servicio adicional actualizado correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Servicio adicional actualizado correctamente.
+ *                 data:
+ *                   type: object
  */
-router.put("/:id", updateServicioAdicional);
+router.put('/:id', verifyToken, updateServicioAdicional);
 
 /**
  * @swagger
  * /api/servicios-adicionales/{id}:
  *   delete:
- *     summary: Eliminar un servicio adicional
+ *     summary: Elimina un servicio adicional existente
  *     tags: [ServiciosAdicionales]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         description: ID del servicio adicional a eliminar
  *         required: true
- *         schema:\n           type: string
- *     responses:\n       200:\n         description: Servicio adicional eliminado correctamente\n       404:\n         description: Servicio adicional no encontrado\n       500:\n         description: Error interno del servidor
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Servicio adicional eliminado correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Servicio adicional eliminado correctamente.
+ *                 data:
+ *                   type: object
  */
-router.delete("/:id", deleteServicioAdicional);
+router.delete('/:id', verifyToken, deleteServicioAdicional);
 
 export default router;

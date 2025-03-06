@@ -1,11 +1,12 @@
-import express from "express";
+// src/routes/proveedores.routes.js
+import express from 'express';
+import { verifyToken } from '../middlewares/auth.middleware.js';
 import {
   getProveedores,
-  getProveedorById,
   createProveedor,
   updateProveedor,
-  deleteProveedor
-} from "../controllers/proveedores.controller.js";
+  deleteProveedor,
+} from '../controllers/proveedores.controller.js';
 
 const router = express.Router();
 
@@ -13,55 +14,46 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: Proveedores
- *   description: Endpoints para la gestión de proveedores
+ *   description: Endpoints para administrar proveedores
  */
 
 /**
  * @swagger
  * /api/proveedores:
  *   get:
- *     summary: Obtener todos los proveedores
+ *     summary: Obtiene la lista de proveedores
  *     tags: [Proveedores]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de proveedores
- *       500:
- *         description: Error interno del servidor
+ *         description: Proveedores obtenidos correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Proveedores obtenidos correctamente.
+ *                 data:
+ *                   type: array
  */
-router.get("/", getProveedores);
-
-/**
- * @swagger
- * /api/proveedores/{id}:
- *   get:
- *     summary: Obtener un proveedor por ID
- *     tags: [Proveedores]
- *     parameters:
- *       - in: path
- *         name: id
- *         description: ID del proveedor
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Datos del proveedor
- *       404:
- *         description: Proveedor no encontrado
- *       500:
- *         description: Error interno del servidor
- */
-router.get("/:id", getProveedorById);
+router.get('/', verifyToken, getProveedores);
 
 /**
  * @swagger
  * /api/proveedores:
  *   post:
- *     summary: Crear un nuevo proveedor
+ *     summary: Crea un nuevo proveedor
  *     tags: [Proveedores]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
- *       description: Datos del nuevo proveedor
  *       content:
  *         application/json:
  *           schema:
@@ -81,20 +73,31 @@ router.get("/:id", getProveedorById);
  *                 type: string
  *     responses:
  *       201:
- *         description: Proveedor creado correctamente
- *       400:
- *         description: Datos inválidos
- *       500:
- *         description: Error interno del servidor
+ *         description: Proveedor creado correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Proveedor creado correctamente.
+ *                 data:
+ *                   type: object
  */
-router.post("/", createProveedor);
+router.post('/', verifyToken, createProveedor);
 
 /**
  * @swagger
  * /api/proveedores/{id}:
  *   put:
- *     summary: Actualizar un proveedor
+ *     summary: Actualiza un proveedor existente
  *     tags: [Proveedores]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -104,7 +107,6 @@ router.post("/", createProveedor);
  *           type: string
  *     requestBody:
  *       required: true
- *       description: Datos a actualizar del proveedor
  *       content:
  *         application/json:
  *           schema:
@@ -122,22 +124,35 @@ router.post("/", createProveedor);
  *                 type: string
  *               indicaciones:
  *                 type: string
+ *               estado:
+ *                 type: boolean
  *     responses:
  *       200:
- *         description: Proveedor actualizado correctamente
- *       404:
- *         description: Proveedor no encontrado
- *       500:
- *         description: Error interno del servidor
+ *         description: Proveedor actualizado correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Proveedor actualizado correctamente.
+ *                 data:
+ *                   type: object
  */
-router.put("/:id", updateProveedor);
+router.put('/:id', verifyToken, updateProveedor);
 
 /**
  * @swagger
  * /api/proveedores/{id}:
  *   delete:
- *     summary: Eliminar un proveedor
+ *     summary: Elimina un proveedor existente
  *     tags: [Proveedores]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -147,12 +162,21 @@ router.put("/:id", updateProveedor);
  *           type: string
  *     responses:
  *       200:
- *         description: Proveedor eliminado correctamente
- *       404:
- *         description: Proveedor no encontrado
- *       500:
- *         description: Error interno del servidor
+ *         description: Proveedor eliminado correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Proveedor eliminado correctamente.
+ *                 data:
+ *                   type: object
  */
-router.delete("/:id", deleteProveedor);
+router.delete('/:id', verifyToken, deleteProveedor);
 
 export default router;

@@ -1,3 +1,4 @@
+// src/controllers/serviciosAdicionales.controller.js
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
@@ -5,42 +6,16 @@ const prisma = new PrismaClient();
 export const getServiciosAdicionales = async (req, res) => {
   try {
     const servicios = await prisma.serviciosAdicionales.findMany();
-    res.json({
+    res.status(200).json({
       success: true,
-      message: "Servicios adicionales obtenidos correctamente.",
+      message: 'Servicios adicionales obtenidos correctamente.',
       data: servicios,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Error al obtener los servicios adicionales.",
-      error: error.message,
-    });
-  }
-};
-
-// Obtener un servicio adicional por ID
-export const getServicioAdicionalById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const servicio = await prisma.serviciosAdicionales.findUnique({
-      where: { id },
-    });
-    if (!servicio) {
-      return res.status(404).json({
-        success: false,
-        message: "Servicio adicional no encontrado.",
-      });
-    }
-    res.json({
-      success: true,
-      message: "Servicio adicional obtenido correctamente.",
-      data: servicio,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Error al obtener el servicio adicional.",
+      message: 'Error al obtener los servicios adicionales.',
+      data: [],
       error: error.message,
     });
   }
@@ -50,59 +25,65 @@ export const getServicioAdicionalById = async (req, res) => {
 export const createServicioAdicional = async (req, res) => {
   try {
     const { nombre, precio } = req.body;
-    const nuevoServicio = await prisma.serviciosAdicionales.create({
+    const newServicio = await prisma.serviciosAdicionales.create({
       data: { nombre, precio },
     });
     res.status(201).json({
       success: true,
-      message: "Servicio adicional creado correctamente.",
-      data: nuevoServicio,
+      message: 'Servicio adicional creado correctamente.',
+      data: newServicio,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Error al crear el servicio adicional.",
+      message: 'Error al crear el servicio adicional.',
+      data: {},
       error: error.message,
     });
   }
 };
 
-// Actualizar un servicio adicional por ID
+// Actualizar un servicio adicional
 export const updateServicioAdicional = async (req, res) => {
+  const { id } = req.params;
+  const { nombre, precio } = req.body;
   try {
-    const { id } = req.params;
-    const { nombre, precio } = req.body;
-    const servicioActualizado = await prisma.serviciosAdicionales.update({
+    const updatedServicio = await prisma.serviciosAdicionales.update({
       where: { id },
       data: { nombre, precio },
     });
-    res.json({
+    res.status(200).json({
       success: true,
-      message: "Servicio adicional actualizado correctamente.",
-      data: servicioActualizado,
+      message: 'Servicio adicional actualizado correctamente.',
+      data: updatedServicio,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Error al actualizar el servicio adicional.",
+      message: 'Error al actualizar el servicio adicional.',
+      data: {},
       error: error.message,
     });
   }
 };
 
-// Eliminar un servicio adicional por ID
+// Eliminar un servicio adicional
 export const deleteServicioAdicional = async (req, res) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
-    await prisma.serviciosAdicionales.delete({ where: { id } });
-    res.json({
+    await prisma.serviciosAdicionales.delete({
+      where: { id },
+    });
+    res.status(200).json({
       success: true,
-      message: "Servicio adicional eliminado correctamente.",
+      message: 'Servicio adicional eliminado correctamente.',
+      data: {},
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Error al eliminar el servicio adicional.",
+      message: 'Error al eliminar el servicio adicional.',
+      data: {},
       error: error.message,
     });
   }

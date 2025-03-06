@@ -1,107 +1,186 @@
+// src/controllers/tarifas.controller.js
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 // Obtener todas las tarifas
 export const getTarifas = async (req, res) => {
-    try {
-        const tarifas = await prisma.tarifas.findMany();
-        res.json({
-            success: true,
-            message: "Tarifas obtenidas correctamente.",
-            data: tarifas
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Error al obtener tarifas.",
-            error: error.message
-        });
-    }
-};
-
-// Obtener una tarifa por ID
-export const getTarifaById = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const tarifa = await prisma.tarifas.findUnique({ where: { id } });
-        if (!tarifa) {
-            return res.status(404).json({
-                success: false,
-                message: "Tarifa no encontrada."
-            });
-        }
-        res.json({
-            success: true,
-            message: "Tarifa obtenida correctamente.",
-            data: tarifa
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Error al obtener la tarifa.",
-            error: error.message
-        });
-    }
+  try {
+    const tarifas = await prisma.tarifas.findMany();
+    res.status(200).json({
+      success: true,
+      message: 'Tarifas obtenidas correctamente.',
+      data: tarifas,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener las tarifas.',
+      data: [],
+      error: error.message,
+    });
+  }
 };
 
 // Crear una nueva tarifa
 export const createTarifa = async (req, res) => {
-    try {
-        const { proveedorId, zonaId, precioPorPersona, precioPrivado, temporadaId } = req.body;
-        const nuevaTarifa = await prisma.tarifas.create({
-            data: { proveedorId, zonaId, precioPorPersona, precioPrivado, temporadaId }
-        });
-        res.status(201).json({
-            success: true,
-            message: "Tarifa creada exitosamente.",
-            data: nuevaTarifa
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Error al crear la tarifa.",
-            error: error.message
-        });
-    }
+  try {
+    const {
+      temporadaId,
+      proveedorId,
+      zona1Id,
+      zona2Id,
+      SencilloIda1a3,
+      SencilloIda4a5,
+      SencilloIda6a8,
+      SencilloIda9a10,
+      SencilloIda11a12,
+      SencilloIda13a16,
+      SencilloReg1a3,
+      SencilloReg4a5,
+      SencilloReg6a8,
+      SencilloReg9a10,
+      SencilloReg11a12,
+      SencilloReg13a16,
+      Redondo1a3,
+      Redondo4a5,
+      Redondo6a8,
+      Redondo9a10,
+      Redondo11a12,
+      Redondo13a16
+    } = req.body;
+
+    const newTarifa = await prisma.tarifas.create({
+      data: {
+        temporadaId,
+        proveedorId,
+        zona1Id,
+        zona2Id,
+        SencilloIda1a3,
+        SencilloIda4a5,
+        SencilloIda6a8,
+        SencilloIda9a10,
+        SencilloIda11a12,
+        SencilloIda13a16,
+        SencilloReg1a3,
+        SencilloReg4a5,
+        SencilloReg6a8,
+        SencilloReg9a10,
+        SencilloReg11a12,
+        SencilloReg13a16,
+        Redondo1a3,
+        Redondo4a5,
+        Redondo6a8,
+        Redondo9a10,
+        Redondo11a12,
+        Redondo13a16
+      },
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Tarifa creada correctamente.',
+      data: newTarifa,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error al crear la tarifa.',
+      data: {},
+      error: error.message,
+    });
+  }
 };
 
-// Actualizar una tarifa por ID
+// Actualizar una tarifa
 export const updateTarifa = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { proveedorId, zonaId, precioPorPersona, precioPrivado, temporadaId } = req.body;
-        const tarifaActualizada = await prisma.tarifas.update({
-            where: { id },
-            data: { proveedorId, zonaId, precioPorPersona, precioPrivado, temporadaId }
-        });
-        res.json({
-            success: true,
-            message: "Tarifa actualizada correctamente.",
-            data: tarifaActualizada
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Error al actualizar la tarifa.",
-            error: error.message
-        });
-    }
+  const { id } = req.params;
+  try {
+    const {
+      temporadaId,
+      proveedorId,
+      zona1Id,
+      zona2Id,
+      SencilloIda1a3,
+      SencilloIda4a5,
+      SencilloIda6a8,
+      SencilloIda9a10,
+      SencilloIda11a12,
+      SencilloIda13a16,
+      SencilloReg1a3,
+      SencilloReg4a5,
+      SencilloReg6a8,
+      SencilloReg9a10,
+      SencilloReg11a12,
+      SencilloReg13a16,
+      Redondo1a3,
+      Redondo4a5,
+      Redondo6a8,
+      Redondo9a10,
+      Redondo11a12,
+      Redondo13a16
+    } = req.body;
+
+    const updatedTarifa = await prisma.tarifas.update({
+      where: { id },
+      data: {
+        temporadaId,
+        proveedorId,
+        zona1Id,
+        zona2Id,
+        SencilloIda1a3,
+        SencilloIda4a5,
+        SencilloIda6a8,
+        SencilloIda9a10,
+        SencilloIda11a12,
+        SencilloIda13a16,
+        SencilloReg1a3,
+        SencilloReg4a5,
+        SencilloReg6a8,
+        SencilloReg9a10,
+        SencilloReg11a12,
+        SencilloReg13a16,
+        Redondo1a3,
+        Redondo4a5,
+        Redondo6a8,
+        Redondo9a10,
+        Redondo11a12,
+        Redondo13a16
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Tarifa actualizada correctamente.',
+      data: updatedTarifa,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error al actualizar la tarifa.',
+      data: {},
+      error: error.message,
+    });
+  }
 };
 
-// Eliminar una tarifa por ID
+// Eliminar una tarifa
 export const deleteTarifa = async (req, res) => {
-    try {
-        const { id } = req.params;
-        await prisma.tarifas.delete({ where: { id } });
-        res.json({
-            success: true,
-            message: "Tarifa eliminada correctamente."
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Error al eliminar la tarifa.",
-            error: error.message
-        });
-    }
+  const { id } = req.params;
+  try {
+    await prisma.tarifas.delete({
+      where: { id },
+    });
+    res.status(200).json({
+      success: true,
+      message: 'Tarifa eliminada correctamente.',
+      data: {},
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error al eliminar la tarifa.',
+      data: {},
+      error: error.message,
+    });
+  }
 };

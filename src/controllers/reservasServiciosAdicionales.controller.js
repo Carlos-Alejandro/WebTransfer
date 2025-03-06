@@ -1,151 +1,111 @@
+// src/controllers/reservasServiciosAdicionales.controller.js
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-// Obtener todas las reservas de servicios adicionales
+// Obtener todas las asignaciones de servicios adicionales para reservas
 export const getReservasServiciosAdicionales = async (req, res) => {
-    try {
-        const reservasServicios = await prisma.reservasServiciosAdicionales.findMany();
-        res.json({
-            success: true,
-            message: "Reservas de servicios adicionales obtenidas correctamente.",
-            data: reservasServicios
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Error al obtener reservas de servicios adicionales.",
-            error: error.message
-        });
-    }
+  try {
+    const asignaciones = await prisma.reservasServiciosAdicionales.findMany();
+    res.status(200).json({
+      success: true,
+      message: 'Reservas de servicios adicionales obtenidas correctamente.',
+      data: asignaciones,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener las reservas de servicios adicionales.',
+      data: [],
+      error: error.message,
+    });
+  }
 };
 
-// Obtener una reserva de servicio adicional por ID compuesto
-export const getReservaServicioAdicionalById = async (req, res) => {
-    try {
-        const { reservaId, servicioAdicionalId } = req.params;
-        // Usamos findFirst para claves compuestas
-        const reservaServicio = await prisma.reservasServiciosAdicionales.findFirst({
-            where: { reservaId, servicioAdicionalId }
-        });
-        if (!reservaServicio) {
-            return res.status(404).json({
-                success: false,
-                message: "Reserva de servicio adicional no encontrada."
-            });
-        }
-        res.json({
-            success: true,
-            message: "Reserva de servicio adicional obtenida correctamente.",
-            data: reservaServicio
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Error al obtener la reserva de servicio adicional.",
-            error: error.message
-        });
+// Crear una nueva asignación de servicio adicional a una reserva
+export const createReservasServiciosAdicionales = async (req, res) => {
+  try {
+    const { reservaId, servicioAdicionalId, cantidad } = req.body;
+
+    // Verificar si la asignación ya existe (utilizando la llave compuesta)
+    const existing = await prisma.reservasServiciosAdicionales.findUnique({
+      where: {
+        reservaId_servicioAdicionalId: { reservaId, servicioAdicionalId },
+      },
+    });
+    if (existing) {
+      return res.status(400).json({
+        success: false,
+        message: 'La asignación de servicio adicional ya existe para esta reserva.',
+        data: {},
+        error: 'ASSIGNMENT_ALREADY_EXISTS',
+      });
     }
+
+    const newAssignment = await prisma.reservasServiciosAdicionales.create({
+      data: { reservaId, servicioAdicionalId, cantidad },
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Asignación de servicio adicional creada correctamente.',
+      data: newAssignment,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error al crear la asignación de servicio adicional.',
+      data: {},
+      error: error.message,
+    });
+  }
 };
 
-// Crear una nueva reserva de servicio adicional
-export const createReservaServicioAdicional = async (req, res) => {
-    try {
-        const { reservaId, servicioAdicionalId, cantidad } = req.body;
-
-        // Verificar si la reserva y el servicio adicional existen
-        const reserva = await prisma.reservas.findUnique({ where: { id: reservaId } });
-        const servicio = await prisma.serviciosAdicionales.findUnique({ where: { id: servicioAdicionalId } });
-
-        if (!reserva || !servicio) {
-            return res.status(404).json({
-                success: false,
-                message: "La reserva o el servicio adicional no existen."
-            });
-        }
-
-        const nuevaReservaServicio = await prisma.reservasServiciosAdicionales.create({
-            data: { reservaId, servicioAdicionalId, cantidad }
-        });
-
-        res.status(201).json({
-            success: true,
-            message: "Reserva de servicio adicional creada exitosamente.",
-            data: nuevaReservaServicio
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Error al crear la reserva de servicio adicional.",
-            error: error.message
-        });
-    }
+// Actualizar la cantidad de una asignación de servicio adicional
+export const updateReservasServiciosAdicionales = async (req, res) => {
+  const { reservaId, servicioAdicionalId } = req.params;
+  const { cantidad } = req.body;
+  try {
+    const updatedAssignment = await prisma.reservasServiciosAdicionales.update({
+      where: {
+        reservaId_servicioAdicionalId: { reservaId, servicioAdicionalId },
+      },
+      data: { cantidad },
+    });
+    res.status(200).json({
+      success: true,
+      message: 'Asignación de servicio adicional actualizada correctamente.',
+      data: updatedAssignment,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error al actualizar la asignación de servicio adicional.',
+      data: {},
+      error: error.message,
+    });
+  }
 };
 
-// Actualizar una reserva de servicio adicional
-export const updateReservaServicioAdicional = async (req, res) => {
-    try {
-        const { reservaId, servicioAdicionalId } = req.params;
-        const { cantidad } = req.body;
-
-        // Verificar si la reserva de servicio adicional existe
-        const reservaServicio = await prisma.reservasServiciosAdicionales.findFirst({
-            where: { reservaId, servicioAdicionalId }
-        });
-        if (!reservaServicio) {
-            return res.status(404).json({
-                success: false,
-                message: "La reserva de servicio adicional no existe."
-            });
-        }
-
-        const reservaActualizada = await prisma.reservasServiciosAdicionales.update({
-            where: { reservaId_servicioAdicionalId: { reservaId, servicioAdicionalId } },
-            data: { cantidad }
-        });
-
-        res.json({
-            success: true,
-            message: "Reserva de servicio adicional actualizada correctamente.",
-            data: reservaActualizada
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Error al actualizar la reserva de servicio adicional.",
-            error: error.message
-        });
-    }
-};
-
-// Eliminar una reserva de servicio adicional
-export const deleteReservaServicioAdicional = async (req, res) => {
-    try {
-        const { reservaId, servicioAdicionalId } = req.params;
-
-        // Verificar si la reserva de servicio adicional existe
-        const reservaServicio = await prisma.reservasServiciosAdicionales.findFirst({
-            where: { reservaId, servicioAdicionalId }
-        });
-        if (!reservaServicio) {
-            return res.status(404).json({
-                success: false,
-                message: "La reserva de servicio adicional no existe."
-            });
-        }
-
-        await prisma.reservasServiciosAdicionales.delete({
-            where: { reservaId_servicioAdicionalId: { reservaId, servicioAdicionalId } }
-        });
-
-        res.json({
-            success: true,
-            message: "Reserva de servicio adicional eliminada correctamente."
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Error al eliminar la reserva de servicio adicional.",
-            error: error.message
-        });
-    }
+// Eliminar una asignación de servicio adicional de una reserva
+export const deleteReservasServiciosAdicionales = async (req, res) => {
+  const { reservaId, servicioAdicionalId } = req.params;
+  try {
+    await prisma.reservasServiciosAdicionales.delete({
+      where: {
+        reservaId_servicioAdicionalId: { reservaId, servicioAdicionalId },
+      },
+    });
+    res.status(200).json({
+      success: true,
+      message: 'Asignación de servicio adicional eliminada correctamente.',
+      data: {},
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error al eliminar la asignación de servicio adicional.',
+      data: {},
+      error: error.message,
+    });
+  }
 };

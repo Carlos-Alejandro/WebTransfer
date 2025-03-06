@@ -1,11 +1,11 @@
-import express from "express";
+// src/routes/roles.routes.js
+import express from 'express';
 import {
   getRoles,
-  getRolById,
-  createRol,
-  updateRol,
-  deleteRol
-} from "../controllers/roles.controller.js";
+  createRole,
+  updateRole,
+  deleteRole,
+} from '../controllers/roles.controller.js';
 
 const router = express.Router();
 
@@ -13,55 +13,46 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: Roles
- *   description: Endpoints para la gestión de roles
+ *   description: Endpoints para administrar roles
  */
 
 /**
  * @swagger
  * /api/roles:
  *   get:
- *     summary: Obtener todos los roles
+ *     summary: Obtiene la lista de roles
  *     tags: [Roles]
  *     responses:
  *       200:
- *         description: Lista de roles
- *       500:
- *         description: Error interno del servidor
+ *         description: Lista de roles obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Roles obtenidos correctamente
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       nombre:
+ *                         type: string
  */
-router.get("/", getRoles);
-
-/**
- * @swagger
- * /api/roles/{id}:
- *   get:
- *     summary: Obtener un rol por ID
- *     tags: [Roles]
- *     parameters:
- *       - in: path
- *         name: id
- *         description: ID del rol
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Datos del rol
- *       404:
- *         description: Rol no encontrado
- *       500:
- *         description: Error interno del servidor
- */
-router.get("/:id", getRolById);
+router.get('/', getRoles);
 
 /**
  * @swagger
  * /api/roles:
  *   post:
- *     summary: Crear un nuevo rol
+ *     summary: Crea un nuevo rol
  *     tags: [Roles]
  *     requestBody:
  *       required: true
- *       description: Datos del nuevo rol
  *       content:
  *         application/json:
  *           schema:
@@ -72,18 +63,29 @@ router.get("/:id", getRolById);
  *     responses:
  *       201:
  *         description: Rol creado correctamente
- *       400:
- *         description: Datos inválidos
- *       500:
- *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Rol creado correctamente
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     nombre:
+ *                       type: string
  */
-router.post("/", createRol);
+router.post('/', createRole);
 
 /**
  * @swagger
  * /api/roles/{id}:
  *   put:
- *     summary: Actualizar un rol
+ *     summary: Actualiza un rol existente
  *     tags: [Roles]
  *     parameters:
  *       - in: path
@@ -94,7 +96,6 @@ router.post("/", createRol);
  *           type: string
  *     requestBody:
  *       required: true
- *       description: Datos a actualizar del rol
  *       content:
  *         application/json:
  *           schema:
@@ -105,18 +106,14 @@ router.post("/", createRol);
  *     responses:
  *       200:
  *         description: Rol actualizado correctamente
- *       404:
- *         description: Rol no encontrado
- *       500:
- *         description: Error interno del servidor
  */
-router.put("/:id", updateRol);
+router.put('/:id', updateRole);
 
 /**
  * @swagger
  * /api/roles/{id}:
  *   delete:
- *     summary: Eliminar un rol
+ *     summary: Elimina un rol existente
  *     tags: [Roles]
  *     parameters:
  *       - in: path
@@ -128,11 +125,7 @@ router.put("/:id", updateRol);
  *     responses:
  *       200:
  *         description: Rol eliminado correctamente
- *       404:
- *         description: Rol no encontrado
- *       500:
- *         description: Error interno del servidor
  */
-router.delete("/:id", deleteRol);
+router.delete('/:id', deleteRole);
 
 export default router;

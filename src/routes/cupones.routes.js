@@ -1,33 +1,33 @@
-// src/routes/pagos.routes.js
+// src/routes/cupones.routes.js
 import express from 'express';
 import { verifyToken } from '../middlewares/auth.middleware.js';
 import {
-  getPagos,
-  createPago,
-  updatePago,
-  deletePago,
-} from '../controllers/pagos.controller.js';
+  getCupones,
+  createCupon,
+  updateCupon,
+  deleteCupon,
+} from '../controllers/cupones.controller.js';
 
 const router = express.Router();
 
 /**
  * @swagger
  * tags:
- *   name: Pagos
- *   description: Endpoints para administrar pagos
+ *   name: Cupones
+ *   description: Endpoints para administrar cupones
  */
 
 /**
  * @swagger
- * /api/pagos:
+ * /api/cupones:
  *   get:
- *     summary: Obtiene la lista de pagos
- *     tags: [Pagos]
+ *     summary: Obtiene la lista de cupones
+ *     tags: [Cupones]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Pagos obtenidos correctamente.
+ *         description: Cupones obtenidos correctamente.
  *         content:
  *           application/json:
  *             schema:
@@ -38,18 +38,18 @@ const router = express.Router();
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Pagos obtenidos correctamente.
+ *                   example: Cupones obtenidos correctamente.
  *                 data:
  *                   type: array
  */
-router.get('/', verifyToken, getPagos);
+router.get('/', verifyToken, getCupones);
 
 /**
  * @swagger
- * /api/pagos:
+ * /api/cupones:
  *   post:
- *     summary: Crea un nuevo pago
- *     tags: [Pagos]
+ *     summary: Crea un nuevo cupón
+ *     tags: [Cupones]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -59,22 +59,34 @@ router.get('/', verifyToken, getPagos);
  *           schema:
  *             type: object
  *             properties:
- *               reservaId:
+ *               Codigo:
  *                 type: string
- *               metodoPago:
+ *               nombre:
  *                 type: string
- *               monto:
- *                 type: number
- *               estado:
- *                 type: string
- *               fechaPago:
+ *               FechaAplicacion:
  *                 type: string
  *                 format: date-time
- *               voucher:
+ *               FechaInicio:
  *                 type: string
+ *                 format: date-time
+ *               FechaFin:
+ *                 type: string
+ *                 format: date-time
+ *               Banner:
+ *                 type: string
+ *               TipoDescuento:
+ *                 type: string
+ *               Valor:
+ *                 type: number
+ *               MinCompra:
+ *                 type: number
+ *               Limite:
+ *                 type: integer
+ *               Estado:
+ *                 type: boolean
  *     responses:
  *       201:
- *         description: Pago creado correctamente.
+ *         description: Cupón creado correctamente.
  *         content:
  *           application/json:
  *             schema:
@@ -85,24 +97,24 @@ router.get('/', verifyToken, getPagos);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Pago creado correctamente.
+ *                   example: Cupón creado correctamente.
  *                 data:
  *                   type: object
  */
-router.post('/', verifyToken, createPago);
+router.post('/', verifyToken, createCupon);
 
 /**
  * @swagger
- * /api/pagos/{id}:
+ * /api/cupones/{id}:
  *   put:
- *     summary: Actualiza un pago existente
- *     tags: [Pagos]
+ *     summary: Actualiza un cupón existente
+ *     tags: [Cupones]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         description: ID del pago a actualizar
+ *         description: ID del cupón a actualizar
  *         required: true
  *         schema:
  *           type: string
@@ -113,22 +125,34 @@ router.post('/', verifyToken, createPago);
  *           schema:
  *             type: object
  *             properties:
- *               reservaId:
+ *               Codigo:
  *                 type: string
- *               metodoPago:
+ *               nombre:
  *                 type: string
- *               monto:
- *                 type: number
- *               estado:
- *                 type: string
- *               fechaPago:
+ *               FechaAplicacion:
  *                 type: string
  *                 format: date-time
- *               voucher:
+ *               FechaInicio:
  *                 type: string
+ *                 format: date-time
+ *               FechaFin:
+ *                 type: string
+ *                 format: date-time
+ *               Banner:
+ *                 type: string
+ *               TipoDescuento:
+ *                 type: string
+ *               Valor:
+ *                 type: number
+ *               MinCompra:
+ *                 type: number
+ *               Limite:
+ *                 type: integer
+ *               Estado:
+ *                 type: boolean
  *     responses:
  *       200:
- *         description: Pago actualizado correctamente.
+ *         description: Cupón actualizado correctamente.
  *         content:
  *           application/json:
  *             schema:
@@ -139,30 +163,30 @@ router.post('/', verifyToken, createPago);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Pago actualizado correctamente.
+ *                   example: Cupón actualizado correctamente.
  *                 data:
  *                   type: object
  */
-router.put('/:id', verifyToken, updatePago);
+router.put('/:id', verifyToken, updateCupon);
 
 /**
  * @swagger
- * /api/pagos/{id}:
+ * /api/cupones/{id}:
  *   delete:
- *     summary: Elimina un pago existente
- *     tags: [Pagos]
+ *     summary: Elimina un cupón existente
+ *     tags: [Cupones]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         description: ID del pago a eliminar
+ *         description: ID del cupón a eliminar
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Pago eliminado correctamente.
+ *         description: Cupón eliminado correctamente.
  *         content:
  *           application/json:
  *             schema:
@@ -173,10 +197,10 @@ router.put('/:id', verifyToken, updatePago);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Pago eliminado correctamente.
+ *                   example: Cupón eliminado correctamente.
  *                 data:
  *                   type: object
  */
-router.delete('/:id', verifyToken, deletePago);
+router.delete('/:id', verifyToken, deleteCupon);
 
 export default router;

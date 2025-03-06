@@ -1,27 +1,27 @@
-// src/routes/rolesPermisos.routes.js
+// src/routes/rutaCupon.routes.js
 import express from 'express';
 import { verifyToken } from '../middlewares/auth.middleware.js';
 import {
-  getRolesPermisos,
-  createRolePermiso,
-  deleteRolePermiso,
-} from '../controllers/rolesPermisos.controller.js';
+  getRutaCupon,
+  createRutaCupon,
+  deleteRutaCupon,
+} from '../controllers/rutaCupon.controller.js';
 
 const router = express.Router();
 
 /**
  * @swagger
  * tags:
- *   name: RolesPermisos
- *   description: Endpoints para administrar la asignación de roles y permisos
+ *   name: RutaCupon
+ *   description: Endpoints para administrar la asignación entre cupones y rutas
  */
 
 /**
  * @swagger
- * /api/roles-permisos:
+ * /api/ruta-cupon:
  *   get:
- *     summary: Obtiene todas las asignaciones de roles y permisos
- *     tags: [RolesPermisos]
+ *     summary: Obtiene todas las asignaciones de cupones y rutas
+ *     tags: [RutaCupon]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -37,18 +37,18 @@ const router = express.Router();
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Roles permisos obtenidos correctamente.
+ *                   example: Asignaciones obtenidas correctamente.
  *                 data:
  *                   type: array
  */
-router.get('/', verifyToken, getRolesPermisos);
+router.get('/', verifyToken, getRutaCupon);
 
 /**
  * @swagger
- * /api/roles-permisos:
+ * /api/ruta-cupon:
  *   post:
- *     summary: Crea una nueva asignación de rol y permiso
- *     tags: [RolesPermisos]
+ *     summary: Crea una nueva asignación entre cupón y ruta
+ *     tags: [RutaCupon]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -58,9 +58,9 @@ router.get('/', verifyToken, getRolesPermisos);
  *           schema:
  *             type: object
  *             properties:
- *               rolId:
+ *               CuponId:
  *                 type: string
- *               permisoId:
+ *               RutaId:
  *                 type: string
  *     responses:
  *       201:
@@ -75,33 +75,33 @@ router.get('/', verifyToken, getRolesPermisos);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Asignación de rol permiso creada correctamente.
+ *                   example: Asignación creada correctamente.
  *                 data:
  *                   type: object
  */
-router.post('/', verifyToken, createRolePermiso);
+router.post('/', verifyToken, createRutaCupon);
 
 /**
  * @swagger
- * /api/roles-permisos/{rolId}/{permisoId}:
+ * /api/ruta-cupon/{CuponId}/{RutaId}:
  *   delete:
- *     summary: Elimina una asignación de rol y permiso existente
- *     tags: [RolesPermisos]
+ *     summary: Elimina una asignación existente entre cupón y ruta
+ *     tags: [RutaCupon]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: rolId
+ *         name: CuponId
  *         required: true
  *         schema:
  *           type: string
- *         description: ID del rol
+ *         description: ID del cupón
  *       - in: path
- *         name: permisoId
+ *         name: RutaId
  *         required: true
  *         schema:
  *           type: string
- *         description: ID del permiso
+ *         description: ID de la ruta
  *     responses:
  *       200:
  *         description: Asignación eliminada correctamente.
@@ -115,10 +115,10 @@ router.post('/', verifyToken, createRolePermiso);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Asignación de rol permiso eliminada correctamente.
+ *                   example: Asignación eliminada correctamente.
  *                 data:
  *                   type: object
  */
-router.delete('/:rolId/:permisoId', verifyToken, deleteRolePermiso);
+router.delete('/:CuponId/:RutaId', verifyToken, deleteRutaCupon);
 
 export default router;

@@ -1,11 +1,12 @@
-import express from "express";
+// src/routes/ubicaciones.routes.js
+import express from 'express';
+import { verifyToken } from '../middlewares/auth.middleware.js';
 import {
   getUbicaciones,
-  getUbicacionById,
   createUbicacion,
   updateUbicacion,
-  deleteUbicacion
-} from "../controllers/ubicaciones.controller.js";
+  deleteUbicacion,
+} from '../controllers/ubicaciones.controller.js';
 
 const router = express.Router();
 
@@ -13,90 +14,92 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: Ubicaciones
- *   description: Endpoints para la gestión de ubicaciones
+ *   description: Endpoints para administrar ubicaciones
  */
 
 /**
  * @swagger
  * /api/ubicaciones:
  *   get:
- *     summary: Obtener todas las ubicaciones
+ *     summary: Obtiene la lista de ubicaciones
  *     tags: [Ubicaciones]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de ubicaciones
- *       500:
- *         description: Error interno del servidor
+ *         description: Ubicaciones obtenidas correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Ubicaciones obtenidas correctamente.
+ *                 data:
+ *                   type: array
  */
-router.get("/", getUbicaciones);
-
-/**
- * @swagger
- * /api/ubicaciones/{id}:
- *   get:
- *     summary: Obtener una ubicación por ID
- *     tags: [Ubicaciones]
- *     parameters:
- *       - in: path
- *         name: id
- *         description: ID de la ubicación
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Datos de la ubicación
- *       404:
- *         description: Ubicación no encontrada
- *       500:
- *         description: Error interno del servidor
- */
-router.get("/:id", getUbicacionById);
+router.get('/', verifyToken, getUbicaciones);
 
 /**
  * @swagger
  * /api/ubicaciones:
  *   post:
- *     summary: Crear una nueva ubicación
+ *     summary: Crea una nueva ubicación
  *     tags: [Ubicaciones]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
- *       description: Datos de la nueva ubicación
  *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
+ *               zonaId:
+ *                 type: string
+ *               tipoUbicacion:
+ *                 type: string
  *               nombre:
  *                 type: string
  *               direccion:
  *                 type: string
- *               latitudA:
+ *               latitud:
  *                 type: number
- *               longitudA:
- *                 type: number
- *               latitudB:
- *                 type: number
- *               longitudB:
+ *               longitud:
  *                 type: number
  *               descripcion:
  *                 type: string
  *     responses:
  *       201:
- *         description: Ubicación creada correctamente
- *       400:
- *         description: Datos inválidos
- *       500:
- *         description: Error interno del servidor
+ *         description: Ubicación creada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Ubicación creada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.post("/", createUbicacion);
+router.post('/', verifyToken, createUbicacion);
 
 /**
  * @swagger
  * /api/ubicaciones/{id}:
  *   put:
- *     summary: Actualizar una ubicación
+ *     summary: Actualiza una ubicación existente
  *     tags: [Ubicaciones]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -106,42 +109,52 @@ router.post("/", createUbicacion);
  *           type: string
  *     requestBody:
  *       required: true
- *       description: Datos a actualizar de la ubicación
  *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
+ *               zonaId:
+ *                 type: string
+ *               tipoUbicacion:
+ *                 type: string
  *               nombre:
  *                 type: string
  *               direccion:
  *                 type: string
- *               latitudA:
+ *               latitud:
  *                 type: number
- *               longitudA:
- *                 type: number
- *               latitudB:
- *                 type: number
- *               longitudB:
+ *               longitud:
  *                 type: number
  *               descripcion:
  *                 type: string
  *     responses:
  *       200:
- *         description: Ubicación actualizada correctamente
- *       404:
- *         description: Ubicación no encontrada
- *       500:
- *         description: Error interno del servidor
+ *         description: Ubicación actualizada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Ubicación actualizada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.put("/:id", updateUbicacion);
+router.put('/:id', verifyToken, updateUbicacion);
 
 /**
  * @swagger
  * /api/ubicaciones/{id}:
  *   delete:
- *     summary: Eliminar una ubicación
+ *     summary: Elimina una ubicación existente
  *     tags: [Ubicaciones]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -151,12 +164,21 @@ router.put("/:id", updateUbicacion);
  *           type: string
  *     responses:
  *       200:
- *         description: Ubicación eliminada correctamente
- *       404:
- *         description: Ubicación no encontrada
- *       500:
- *         description: Error interno del servidor
+ *         description: Ubicación eliminada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Ubicación eliminada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.delete("/:id", deleteUbicacion);
+router.delete('/:id', verifyToken, deleteUbicacion);
 
 export default router;

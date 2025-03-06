@@ -1,11 +1,12 @@
-import express from "express";
+// src/routes/zonas.routes.js
+import express from 'express';
+import { verifyToken } from '../middlewares/auth.middleware.js';
 import {
   getZonas,
-  getZonaById,
   createZona,
   updateZona,
-  deleteZona
-} from "../controllers/zonas.controller.js";
+  deleteZona,
+} from '../controllers/zonas.controller.js';
 
 const router = express.Router();
 
@@ -13,55 +14,46 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: Zonas
- *   description: Endpoints para la gestión de zonas
+ *   description: Endpoints para administrar zonas
  */
 
 /**
  * @swagger
  * /api/zonas:
  *   get:
- *     summary: Obtener todas las zonas
+ *     summary: Obtiene la lista de zonas
  *     tags: [Zonas]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de zonas
- *       500:
- *         description: Error interno del servidor
+ *         description: Zonas obtenidas correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Zonas obtenidas correctamente.
+ *                 data:
+ *                   type: array
  */
-router.get("/", getZonas);
-
-/**
- * @swagger
- * /api/zonas/{id}:
- *   get:
- *     summary: Obtener una zona por ID
- *     tags: [Zonas]
- *     parameters:
- *       - in: path
- *         name: id
- *         description: ID de la zona
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Datos de la zona
- *       404:
- *         description: Zona no encontrada
- *       500:
- *         description: Error interno del servidor
- */
-router.get("/:id", getZonaById);
+router.get('/', verifyToken, getZonas);
 
 /**
  * @swagger
  * /api/zonas:
  *   post:
- *     summary: Crear una nueva zona
+ *     summary: Crea una nueva zona
  *     tags: [Zonas]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
- *       description: Datos de la nueva zona
  *       content:
  *         application/json:
  *           schema:
@@ -73,20 +65,31 @@ router.get("/:id", getZonaById);
  *                 type: boolean
  *     responses:
  *       201:
- *         description: Zona creada correctamente
- *       400:
- *         description: Datos inválidos
- *       500:
- *         description: Error interno del servidor
+ *         description: Zona creada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Zona creada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.post("/", createZona);
+router.post('/', verifyToken, createZona);
 
 /**
  * @swagger
  * /api/zonas/{id}:
  *   put:
- *     summary: Actualizar una zona
+ *     summary: Actualiza una zona existente
  *     tags: [Zonas]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -96,7 +99,6 @@ router.post("/", createZona);
  *           type: string
  *     requestBody:
  *       required: true
- *       description: Datos a actualizar de la zona
  *       content:
  *         application/json:
  *           schema:
@@ -108,20 +110,31 @@ router.post("/", createZona);
  *                 type: boolean
  *     responses:
  *       200:
- *         description: Zona actualizada correctamente
- *       404:
- *         description: Zona no encontrada
- *       500:
- *         description: Error interno del servidor
+ *         description: Zona actualizada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Zona actualizada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.put("/:id", updateZona);
+router.put('/:id', verifyToken, updateZona);
 
 /**
  * @swagger
  * /api/zonas/{id}:
  *   delete:
- *     summary: Eliminar una zona
+ *     summary: Elimina una zona existente
  *     tags: [Zonas]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -131,12 +144,21 @@ router.put("/:id", updateZona);
  *           type: string
  *     responses:
  *       200:
- *         description: Zona eliminada correctamente
- *       404:
- *         description: Zona no encontrada
- *       500:
- *         description: Error interno del servidor
+ *         description: Zona eliminada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Zona eliminada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.delete("/:id", deleteZona);
+router.delete('/:id', verifyToken, deleteZona);
 
 export default router;

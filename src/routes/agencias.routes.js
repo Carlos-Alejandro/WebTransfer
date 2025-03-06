@@ -1,11 +1,7 @@
-import express from "express";
-import {
-  getAgencias,
-  getAgenciaById,
-  createAgencia,
-  updateAgencia,
-  deleteAgencia
-} from "../controllers/agencias.controller.js";
+// src/routes/agencias.routes.js
+import express from 'express';
+import { verifyToken } from '../middlewares/auth.middleware.js';
+import { getAgencias, createAgencia, updateAgencia, deleteAgencia } from '../controllers/agencias.controller.js';
 
 const router = express.Router();
 
@@ -13,55 +9,46 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: Agencias
- *   description: Endpoints para la gestión de agencias
+ *   description: Endpoints para administrar agencias
  */
 
 /**
  * @swagger
  * /api/agencias:
  *   get:
- *     summary: Obtener todas las agencias
+ *     summary: Obtiene la lista de agencias
  *     tags: [Agencias]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de agencias
- *       500:
- *         description: Error interno del servidor
+ *         description: Agencias obtenidas correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Agencias obtenidas correctamente.
+ *                 data:
+ *                   type: array
  */
-router.get("/", getAgencias);
-
-/**
- * @swagger
- * /api/agencias/{id}:
- *   get:
- *     summary: Obtener una agencia por ID
- *     tags: [Agencias]
- *     parameters:
- *       - in: path
- *         name: id
- *         description: ID de la agencia
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Datos de la agencia
- *       404:
- *         description: Agencia no encontrada
- *       500:
- *         description: Error interno del servidor
- */
-router.get("/:id", getAgenciaById);
+router.get('/', verifyToken, getAgencias);
 
 /**
  * @swagger
  * /api/agencias:
  *   post:
- *     summary: Crear una nueva agencia
+ *     summary: Crea una nueva agencia
  *     tags: [Agencias]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
- *       description: Datos de la nueva agencia
  *       content:
  *         application/json:
  *           schema:
@@ -83,20 +70,31 @@ router.get("/:id", getAgenciaById);
  *                 type: string
  *     responses:
  *       201:
- *         description: Agencia creada correctamente
- *       400:
- *         description: Datos inválidos
- *       500:
- *         description: Error interno del servidor
+ *         description: Agencia creada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Agencia creada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.post("/", createAgencia);
+router.post('/', verifyToken, createAgencia);
 
 /**
  * @swagger
  * /api/agencias/{id}:
  *   put:
- *     summary: Actualizar una agencia
+ *     summary: Actualiza una agencia existente
  *     tags: [Agencias]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -106,7 +104,6 @@ router.post("/", createAgencia);
  *           type: string
  *     requestBody:
  *       required: true
- *       description: Datos a actualizar de la agencia
  *       content:
  *         application/json:
  *           schema:
@@ -128,20 +125,31 @@ router.post("/", createAgencia);
  *                 type: string
  *     responses:
  *       200:
- *         description: Agencia actualizada correctamente
- *       404:
- *         description: Agencia no encontrada
- *       500:
- *         description: Error interno del servidor
+ *         description: Agencia actualizada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Agencia actualizada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.put("/:id", updateAgencia);
+router.put('/:id', verifyToken, updateAgencia);
 
 /**
  * @swagger
  * /api/agencias/{id}:
  *   delete:
- *     summary: Eliminar una agencia
+ *     summary: Elimina una agencia existente
  *     tags: [Agencias]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -151,12 +159,21 @@ router.put("/:id", updateAgencia);
  *           type: string
  *     responses:
  *       200:
- *         description: Agencia eliminada correctamente
- *       404:
- *         description: Agencia no encontrada
- *       500:
- *         description: Error interno del servidor
+ *         description: Agencia eliminada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Agencia eliminada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.delete("/:id", deleteAgencia);
+router.delete('/:id', verifyToken, deleteAgencia);
 
 export default router;

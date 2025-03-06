@@ -8,133 +8,176 @@ datasource db {
 }
 
 model Roles {
-  id            String          @id @default(uuid())
-  nombre        String          @unique
-  rolesPermisos RolesPermisos[]
+  id            String           @id @default(uuid())
+  nombre        String           @unique
   usuarios      Usuarios[]
+  rolesPermisos RolesPermisos[]
 }
 
 model RolesPermisos {
   rolId     String
   permisoId String
-  permiso   Permisos @relation(fields: [permisoId], references: [id])
-  rol       Roles    @relation(fields: [rolId], references: [id])
+
+  rol     Roles    @relation(fields: [rolId], references: [id])
+  permiso Permisos @relation(fields: [permisoId], references: [id])
 
   @@id([rolId, permisoId])
 }
 
 model Permisos {
-  id            String          @id @default(uuid())
-  nombre        String          @unique
+  id            String           @id @default(uuid())
+  nombre        String           @unique
   descripcion   String
   rolesPermisos RolesPermisos[]
 }
 
 model Usuarios {
-  id            String      @id @default(uuid())
+  id            String    @id @default(uuid())
   nombre        String
-  correo        String      @unique
+  correo        String    @unique
   contrasena    String
-  telefono      String?
+  telefono      String
   rolId         String
-  estado        Boolean     @default(true)
-  fechaCreacion DateTime    @default(now())
-  opiniones     Opiniones[]
-  reservas      Reservas[]
-  rol           Roles       @relation(fields: [rolId], references: [id])
+  estado        Boolean
+  fechaCreacion DateTime
+
+  rol       Roles     @relation(fields: [rolId], references: [id])
+  opiniones Opiniones[]
+  reservas  Reservas[]
 }
 
 model Opiniones {
-  id            String   @id @default(uuid())
+  id            String    @id @default(uuid())
   reservaId     String
   usuarioId     String
   puntuacion    Int
   comentario    String
-  fechaCreacion DateTime @default(now())
-  reserva       Reservas @relation(fields: [reservaId], references: [id])
-  usuario       Usuarios @relation(fields: [usuarioId], references: [id])
+  fechaCreacion DateTime
+
+  reserva Reservas @relation(fields: [reservaId], references: [id])
+  usuario Usuarios  @relation(fields: [usuarioId], references: [id])
 }
+
 
 model Agencias {
   id              String     @id @default(uuid())
   nombreComercial String
   contacto        String
-  correo          String?
-  movil           String?
+  correo          String
+  movil           String?    // Ahora es opcional
   direccion       String
   descuento       Decimal
-  urlLogo         String?
-  reservas        Reservas[]
+  urlLogo         String?    // Ahora es opcional
+
+  reservas Reservas[]
 }
 
+
 model Proveedores {
-  id            String   @id @default(uuid())
+  id            String     @id @default(uuid())
   nombre        String
   contacto      String
   telefono      String
   email         String
   direccion     String
-  indicaciones  String?
-  estado        Boolean  @default(true)
-  fechaRegistro DateTime @default(now())
-  tarifas       Tarifas[]
+  indicaciones  String
+  estado        Boolean
+  fechaRegistro DateTime
+
+  tarifas Tarifas[]
 }
 
 model Tarifas {
-  id               String      @id @default(uuid())
-  proveedorId      String
-  zonaId           String
-  precioPorPersona Decimal
-  precioPrivado    Decimal
+  id               String   @id @default(uuid())
   temporadaId      String
-  reservas         Reservas[]
-  proveedor        Proveedores @relation(fields: [proveedorId], references: [id])
-  temporada        Temporadas  @relation(fields: [temporadaId], references: [id])
-  zona             Zonas       @relation(fields: [zonaId], references: [id])
+  proveedorId      String
+  zona1Id          String
+  zona2Id          String
+  SencilloIda1a3   Decimal
+  SencilloIda4a5   Decimal
+  SencilloIda6a8   Decimal
+  SencilloIda9a10  Decimal
+  SencilloIda11a12 Decimal
+  SencilloIda13a16 Decimal
+  SencilloReg1a3   Decimal
+  SencilloReg4a5   Decimal
+  SencilloReg6a8   Decimal
+  SencilloReg9a10  Decimal
+  SencilloReg11a12 Decimal
+  SencilloReg13a16 Decimal
+  Redondo1a3       Decimal
+  Redondo4a5       Decimal
+  Redondo6a8       Decimal
+  Redondo9a10      Decimal
+  Redondo11a12     Decimal
+  Redondo13a16     Decimal
+
+  temporada Temporadas @relation(fields: [temporadaId], references: [id])
+  proveedor Proveedores @relation(fields: [proveedorId], references: [id])
+  zona1     Zonas      @relation("Zona1", fields: [zona1Id], references: [id])
+  zona2     Zonas      @relation("Zona2", fields: [zona2Id], references: [id])
+  reservas  Reservas[]
 }
 
 model Reservas {
-  id                String                         @id @default(uuid())
+  id                String   @id @default(uuid())
   folio             String
   agenciaId         String
   tarifaId          String
+  OrigenId          String
+  DestinoId         String
   usuarioId         String
-  numeroVuelo       String
-  aerolinea         String
-  horarioLlegada    DateTime
+  numVueloLlegada   String
+  aerolineaLlegada  String  
+  fechaLlegada      DateTime
+  horaLlegada       DateTime
+  numVueloSalida    String
+  aerolineaSalida   String
+  fechaSalida       DateTime
+  horaSalida        DateTime  
   correoCliente     String
   telefonoCliente   String
-  hotelCliente      String
-  fechaServicio     DateTime
-  numeroPasajeros   Int
-  precioTotal       Decimal
+  hotelCliente      String  
+  numPasajeros      Int
+  subTotal          Decimal
+  perIVA            Decimal
+  IVA               Decimal
+  Total             Decimal
   tipoServicio      String
+  CuponId           String?      // Relación opcional
   estado            String
-  motivoCancelacion String?
-  fechaCreacion     DateTime                       @default(now())
-  opiniones         Opiniones[]
-  pagos             Pagos[]
-  agencia           Agencias                       @relation(fields: [agenciaId], references: [id])
-  tarifa            Tarifas                        @relation(fields: [tarifaId], references: [id])
-  usuario           Usuarios                       @relation(fields: [usuarioId], references: [id])
-  reservasServicios ReservasServiciosAdicionales[]
+  motivoCancelacion String?      // Opcional
+  fechaCancelacion  DateTime?    // Opcional
+  fechaCreacion     DateTime
+
+  agencia  Agencias    @relation(fields: [agenciaId], references: [id])
+  tarifa   Tarifas     @relation(fields: [tarifaId], references: [id])
+  usuario  Usuarios    @relation(fields: [usuarioId], references: [id])
+  origen   Ubicaciones @relation("Origen", fields: [OrigenId], references: [id])
+  destino  Ubicaciones @relation("Destino", fields: [DestinoId], references: [id])
+  opiniones Opiniones[]
+  pagos     Pagos[]
+  ReservasServiciosAdicionales ReservasServiciosAdicionales[]
+  Cupon     Cupones?    @relation(fields: [CuponId], references: [id])
 }
 
 model ReservasServiciosAdicionales {
   reservaId           String
   servicioAdicionalId String
   cantidad            Int
-  reserva             Reservas             @relation(fields: [reservaId], references: [id])
-  servicioAdicional   ServiciosAdicionales @relation(fields: [servicioAdicionalId], references: [id])
+
+  reserva           Reservas             @relation(fields: [reservaId], references: [id])
+  servicioAdicional ServiciosAdicionales @relation(fields: [servicioAdicionalId], references: [id])
 
   @@id([reservaId, servicioAdicionalId])
 }
 
 model ServiciosAdicionales {
-  id                String                         @id @default(uuid())
+  id                String   @id @default(uuid())
   nombre            String
   precio            Decimal
-  reservasServicios ReservasServiciosAdicionales[]
+
+  ReservasServicios ReservasServiciosAdicionales[]
 }
 
 model Pagos {
@@ -143,36 +186,86 @@ model Pagos {
   metodoPago String
   monto      Decimal
   estado     String
-  fechaPago  DateTime
-  reserva    Reservas @relation(fields: [reservaId], references: [id])
+  fechaPago  DateTime  
+  voucher    String
+
+  reserva Reservas @relation(fields: [reservaId], references: [id])
 }
 
 model Zonas {
-  id      String @id @default(uuid())
+  id      String  @id @default(uuid())
   nombre  String
-  estado  Boolean @default(true)
-  tarifas Tarifas[]
-  ubicaciones Ubicaciones[]
+  estado  Boolean
+
+  TarifasZona1   Tarifas[] @relation("Zona1")
+  TarifasZona2   Tarifas[] @relation("Zona2")
+  ubicaciones    Ubicaciones[]
 }
 
 model Ubicaciones {
-  id          String @id @default(uuid())
-  zonaId      String
-  nombre      String
-  direccion   String
-  latitudA    Float
-  longitudA   Float
-  latitudB    Float
-  longitudB   Float
-  descripcion String
-  zona        Zonas @relation(fields: [zonaId], references: [id])
+  id             String  @id @default(uuid())
+  zonaId         String
+  tipoUbicacion  String
+  nombre         String
+  direccion      String
+  latitud        Float
+  longitud       Float
+  descripcion    String
+
+  zona Zonas @relation(fields: [zonaId], references: [id])
+  ReservasOrigen  Reservas[] @relation("Origen")
+  ReservasDestino Reservas[] @relation("Destino")
+  RutasUbicacion1 Rutas[]    @relation("Ubicacion1")
+  RutasUbicacion2 Rutas[]    @relation("Ubicacion2")
+}
+
+model Rutas {
+  id           String  @id @default(uuid())
+  Ubicacion1   String
+  Ubicacion2   String
+  TiempoTraslado Float
+  MapUrl       String
+
+  ubicacion1 Ubicaciones @relation("Ubicacion1", fields: [Ubicacion1], references: [id])
+  ubicacion2 Ubicaciones @relation("Ubicacion2", fields: [Ubicacion2], references: [id])
+  RutaCupon  RutaCupon[]
 }
 
 model Temporadas {
-  id          String   @id @default(uuid())
-  nombre      String
-  fechaInicio DateTime
-  fechaFin    DateTime
-  estado      Boolean  @default(true)
-  tarifas     Tarifas[]
+  id              String   @id @default(uuid())
+  nombre          String
+  FechaAplicacion DateTime
+  fechaInicio     DateTime
+  fechaFin        DateTime
+  estado          Boolean
+
+  Tarifas Tarifas[]
+}
+
+model Cupones {
+  id              String   @id @default(uuid())
+  Codigo          String
+  nombre          String
+  FechaAplicacion DateTime
+  FechaInicio     DateTime
+  FechaFin        DateTime
+  Banner          String
+  TipoDescuento   String
+  Valor           Decimal
+  MinCompra       Decimal
+  Limite          Int
+  Estado          Boolean
+
+  reservas  Reservas[]
+  RutaCupon RutaCupon[]
+}
+
+model RutaCupon {
+  CuponId String
+  RutaId  String
+
+  cupon Cupones @relation(fields: [CuponId], references: [id])
+  ruta  Rutas   @relation(fields: [RutaId], references: [id])
+
+  @@id([CuponId, RutaId])
 }

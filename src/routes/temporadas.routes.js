@@ -1,11 +1,12 @@
-import express from "express";
+// src/routes/temporadas.routes.js
+import express from 'express';
+import { verifyToken } from '../middlewares/auth.middleware.js';
 import {
   getTemporadas,
-  getTemporadaById,
   createTemporada,
   updateTemporada,
-  deleteTemporada
-} from "../controllers/temporadas.controller.js";
+  deleteTemporada,
+} from '../controllers/temporadas.controller.js';
 
 const router = express.Router();
 
@@ -13,55 +14,46 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: Temporadas
- *   description: Endpoints para la gestión de temporadas
+ *   description: Endpoints para administrar temporadas
  */
 
 /**
  * @swagger
  * /api/temporadas:
  *   get:
- *     summary: Obtener todas las temporadas
+ *     summary: Obtiene la lista de temporadas
  *     tags: [Temporadas]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de temporadas
- *       500:
- *         description: Error interno del servidor
+ *         description: Temporadas obtenidas correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Temporadas obtenidas correctamente.
+ *                 data:
+ *                   type: array
  */
-router.get("/", getTemporadas);
-
-/**
- * @swagger
- * /api/temporadas/{id}:
- *   get:
- *     summary: Obtener una temporada por ID
- *     tags: [Temporadas]
- *     parameters:
- *       - in: path
- *         name: id
- *         description: ID de la temporada
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Datos de la temporada
- *       404:
- *         description: Temporada no encontrada
- *       500:
- *         description: Error interno del servidor
- */
-router.get("/:id", getTemporadaById);
+router.get('/', verifyToken, getTemporadas);
 
 /**
  * @swagger
  * /api/temporadas:
  *   post:
- *     summary: Crear una nueva temporada
+ *     summary: Crea una nueva temporada
  *     tags: [Temporadas]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
- *       description: Datos de la nueva temporada
  *       content:
  *         application/json:
  *           schema:
@@ -69,28 +61,44 @@ router.get("/:id", getTemporadaById);
  *             properties:
  *               nombre:
  *                 type: string
+ *               FechaAplicacion:
+ *                 type: string
+ *                 format: date-time
  *               fechaInicio:
  *                 type: string
+ *                 format: date-time
  *               fechaFin:
  *                 type: string
+ *                 format: date-time
  *               estado:
  *                 type: boolean
  *     responses:
  *       201:
- *         description: Temporada creada correctamente
- *       400:
- *         description: Datos inválidos
- *       500:
- *         description: Error interno del servidor
+ *         description: Temporada creada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Temporada creada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.post("/", createTemporada);
+router.post('/', verifyToken, createTemporada);
 
 /**
  * @swagger
  * /api/temporadas/{id}:
  *   put:
- *     summary: Actualizar una temporada
+ *     summary: Actualiza una temporada existente
  *     tags: [Temporadas]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -100,7 +108,6 @@ router.post("/", createTemporada);
  *           type: string
  *     requestBody:
  *       required: true
- *       description: Datos a actualizar de la temporada
  *       content:
  *         application/json:
  *           schema:
@@ -108,28 +115,44 @@ router.post("/", createTemporada);
  *             properties:
  *               nombre:
  *                 type: string
+ *               FechaAplicacion:
+ *                 type: string
+ *                 format: date-time
  *               fechaInicio:
  *                 type: string
+ *                 format: date-time
  *               fechaFin:
  *                 type: string
+ *                 format: date-time
  *               estado:
  *                 type: boolean
  *     responses:
  *       200:
- *         description: Temporada actualizada correctamente
- *       404:
- *         description: Temporada no encontrada
- *       500:
- *         description: Error interno del servidor
+ *         description: Temporada actualizada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Temporada actualizada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.put("/:id", updateTemporada);
+router.put('/:id', verifyToken, updateTemporada);
 
 /**
  * @swagger
  * /api/temporadas/{id}:
  *   delete:
- *     summary: Eliminar una temporada
+ *     summary: Elimina una temporada existente
  *     tags: [Temporadas]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -139,12 +162,21 @@ router.put("/:id", updateTemporada);
  *           type: string
  *     responses:
  *       200:
- *         description: Temporada eliminada correctamente
- *       404:
- *         description: Temporada no encontrada
- *       500:
- *         description: Error interno del servidor
+ *         description: Temporada eliminada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Temporada eliminada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.delete("/:id", deleteTemporada);
+router.delete('/:id', verifyToken, deleteTemporada);
 
 export default router;

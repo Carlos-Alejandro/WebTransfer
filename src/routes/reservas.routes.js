@@ -1,11 +1,12 @@
-import express from "express";
+// src/routes/reservas.routes.js
+import express from 'express';
+import { verifyToken } from '../middlewares/auth.middleware.js';
 import {
   getReservas,
-  getReservaById,
   createReserva,
   updateReserva,
-  deleteReserva
-} from "../controllers/reservas.controller.js";
+  deleteReserva,
+} from '../controllers/reservas.controller.js';
 
 const router = express.Router();
 
@@ -13,55 +14,46 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: Reservas
- *   description: Endpoints para la gestión de reservas
+ *   description: Endpoints para administrar reservas
  */
 
 /**
  * @swagger
  * /api/reservas:
  *   get:
- *     summary: Obtener todas las reservas
+ *     summary: Obtiene la lista de reservas
  *     tags: [Reservas]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de reservas
- *       500:
- *         description: Error interno del servidor
+ *         description: Reservas obtenidas correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Reservas obtenidas correctamente.
+ *                 data:
+ *                   type: array
  */
-router.get("/", getReservas);
-
-/**
- * @swagger
- * /api/reservas/{id}:
- *   get:
- *     summary: Obtener una reserva por ID
- *     tags: [Reservas]
- *     parameters:
- *       - in: path
- *         name: id
- *         description: ID de la reserva
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Datos de la reserva
- *       404:
- *         description: Reserva no encontrada
- *       500:
- *         description: Error interno del servidor
- */
-router.get("/:id", getReservaById);
+router.get('/', verifyToken, getReservas);
 
 /**
  * @swagger
  * /api/reservas:
  *   post:
- *     summary: Crear una nueva reserva
+ *     summary: Crea una nueva reserva
  *     tags: [Reservas]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
- *       description: Datos de la nueva reserva
  *       content:
  *         application/json:
  *           schema:
@@ -73,48 +65,86 @@ router.get("/:id", getReservaById);
  *                 type: string
  *               tarifaId:
  *                 type: string
+ *               OrigenId:
+ *                 type: string
+ *               DestinoId:
+ *                 type: string
  *               usuarioId:
  *                 type: string
- *               numeroVuelo:
+ *               numVueloLlegada:
  *                 type: string
- *               aerolinea:
+ *               aerolineaLlegada:
  *                 type: string
- *               horarioLlegada:
+ *               fechaLlegada:
  *                 type: string
+ *                 format: date-time
+ *               horaLlegada:
+ *                 type: string
+ *                 format: date-time
+ *               numVueloSalida:
+ *                 type: string
+ *               aerolineaSalida:
+ *                 type: string
+ *               fechaSalida:
+ *                 type: string
+ *                 format: date-time
+ *               horaSalida:
+ *                 type: string
+ *                 format: date-time
  *               correoCliente:
  *                 type: string
  *               telefonoCliente:
  *                 type: string
  *               hotelCliente:
  *                 type: string
- *               fechaServicio:
- *                 type: string
- *               numeroPasajeros:
+ *               numPasajeros:
+ *                 type: integer
+ *               subTotal:
  *                 type: number
- *               precioTotal:
+ *               perIVA:
+ *                 type: number
+ *               IVA:
+ *                 type: number
+ *               Total:
  *                 type: number
  *               tipoServicio:
+ *                 type: string
+ *               CuponId:
  *                 type: string
  *               estado:
  *                 type: string
  *               motivoCancelacion:
  *                 type: string
+ *               fechaCancelacion:
+ *                 type: string
+ *                 format: date-time
  *     responses:
  *       201:
- *         description: Reserva creada correctamente
- *       400:
- *         description: Datos inválidos
- *       500:
- *         description: Error interno del servidor
+ *         description: Reserva creada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Reserva creada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.post("/", createReserva);
+router.post('/', verifyToken, createReserva);
 
 /**
  * @swagger
  * /api/reservas/{id}:
  *   put:
- *     summary: Actualizar una reserva
+ *     summary: Actualiza una reserva existente
  *     tags: [Reservas]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -124,7 +154,6 @@ router.post("/", createReserva);
  *           type: string
  *     requestBody:
  *       required: true
- *       description: Datos a actualizar de la reserva
  *       content:
  *         application/json:
  *           schema:
@@ -136,48 +165,86 @@ router.post("/", createReserva);
  *                 type: string
  *               tarifaId:
  *                 type: string
+ *               OrigenId:
+ *                 type: string
+ *               DestinoId:
+ *                 type: string
  *               usuarioId:
  *                 type: string
- *               numeroVuelo:
+ *               numVueloLlegada:
  *                 type: string
- *               aerolinea:
+ *               aerolineaLlegada:
  *                 type: string
- *               horarioLlegada:
+ *               fechaLlegada:
  *                 type: string
+ *                 format: date-time
+ *               horaLlegada:
+ *                 type: string
+ *                 format: date-time
+ *               numVueloSalida:
+ *                 type: string
+ *               aerolineaSalida:
+ *                 type: string
+ *               fechaSalida:
+ *                 type: string
+ *                 format: date-time
+ *               horaSalida:
+ *                 type: string
+ *                 format: date-time
  *               correoCliente:
  *                 type: string
  *               telefonoCliente:
  *                 type: string
  *               hotelCliente:
  *                 type: string
- *               fechaServicio:
- *                 type: string
- *               numeroPasajeros:
+ *               numPasajeros:
+ *                 type: integer
+ *               subTotal:
  *                 type: number
- *               precioTotal:
+ *               perIVA:
+ *                 type: number
+ *               IVA:
+ *                 type: number
+ *               Total:
  *                 type: number
  *               tipoServicio:
+ *                 type: string
+ *               CuponId:
  *                 type: string
  *               estado:
  *                 type: string
  *               motivoCancelacion:
  *                 type: string
+ *               fechaCancelacion:
+ *                 type: string
+ *                 format: date-time
  *     responses:
  *       200:
- *         description: Reserva actualizada correctamente
- *       404:
- *         description: Reserva no encontrada
- *       500:
- *         description: Error interno del servidor
+ *         description: Reserva actualizada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Reserva actualizada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.put("/:id", updateReserva);
+router.put('/:id', verifyToken, updateReserva);
 
 /**
  * @swagger
  * /api/reservas/{id}:
  *   delete:
- *     summary: Eliminar una reserva
+ *     summary: Elimina una reserva existente
  *     tags: [Reservas]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -187,12 +254,21 @@ router.put("/:id", updateReserva);
  *           type: string
  *     responses:
  *       200:
- *         description: Reserva eliminada correctamente
- *       404:
- *         description: Reserva no encontrada
- *       500:
- *         description: Error interno del servidor
+ *         description: Reserva eliminada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Reserva eliminada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.delete("/:id", deleteReserva);
+router.delete('/:id', verifyToken, deleteReserva);
 
 export default router;

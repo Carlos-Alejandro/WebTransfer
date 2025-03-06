@@ -1,5 +1,6 @@
-const swaggerJsDoc = require("swagger-jsdoc");
-const swaggerUi = require("swagger-ui-express");
+// swagger.js (en ESM)
+import swaggerJsDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
 const options = {
   definition: {
@@ -20,42 +21,39 @@ const options = {
         bearerAuth: {
           type: "http",
           scheme: "bearer",
-          bearerFormat: "JWT"
-        }
-      }
+          bearerFormat: "JWT",
+        },
+      },
     },
     security: [
       {
-        bearerAuth: []
-      }
-    ]
+        bearerAuth: [],
+      },
+    ],
   },
-  apis: ["./src/routes/*.js"], // Ajusta la ruta a tus archivos de rutas
+  apis: ["./src/routes/*.js"],
 };
 
 const swaggerSpec = swaggerJsDoc(options);
 
-// Opciones extras para la interfaz
 const swaggerUiOptions = {
-  // Opciones de configuración internas de Swagger UI
   swaggerOptions: {
-    layout: "StandaloneLayout",   // Asegura el layout estándar con la topbar
-    filter: true,                 // Muestra el buscador de endpoints
+    layout: "StandaloneLayout",
+    filter: true,
     deepLinking: true,
-    persistAuthorization: true,   // Mantiene el token en la sesión
+    persistAuthorization: true,
   },
-  // Forzar la visibilidad de la barra superior por si algún CSS la oculta
   customCss: `
     .swagger-ui .topbar {
       display: flex !important;
     }
-  `
+  `,
 };
 
-const swaggerDocs = (app) => {
-  // Montamos Swagger UI en /api-docs
+function swaggerDocs(app) {
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, swaggerUiOptions));
   console.log("📄 Swagger UI disponible en: http://localhost:3000/api-docs");
-};
+}
 
-module.exports = swaggerDocs;
+// Exportamos por defecto (ESM)
+export default swaggerDocs;

@@ -1,11 +1,12 @@
-import express from "express";
+// src/routes/permisos.routes.js
+import express from 'express';
+import { verifyToken } from '../middlewares/auth.middleware.js';
 import {
   getPermisos,
-  getPermisoById,
   createPermiso,
   updatePermiso,
-  deletePermiso
-} from "../controllers/permisos.controller.js";
+  deletePermiso,
+} from '../controllers/permisos.controller.js';
 
 const router = express.Router();
 
@@ -13,55 +14,48 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: Permisos
- *   description: Endpoints para la gestión de permisos
+ *   description: Endpoints para administrar permisos
  */
 
 /**
  * @swagger
  * /api/permisos:
  *   get:
- *     summary: Obtener todos los permisos
+ *     summary: Obtiene la lista de permisos
  *     tags: [Permisos]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de permisos
- *       500:
- *         description: Error interno del servidor
+ *         description: Permisos obtenidos correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Permisos obtenidos correctamente.
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
  */
-router.get("/", getPermisos);
-
-/**
- * @swagger
- * /api/permisos/{id}:
- *   get:
- *     summary: Obtener un permiso por ID
- *     tags: [Permisos]
- *     parameters:
- *       - in: path
- *         name: id
- *         description: ID del permiso
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Datos del permiso
- *       404:
- *         description: Permiso no encontrado
- *       500:
- *         description: Error interno del servidor
- */
-router.get("/:id", getPermisoById);
+router.get('/', verifyToken, getPermisos);
 
 /**
  * @swagger
  * /api/permisos:
  *   post:
- *     summary: Crear un nuevo permiso
+ *     summary: Crea un nuevo permiso
  *     tags: [Permisos]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
- *       description: Datos del nuevo permiso
  *       content:
  *         application/json:
  *           schema:
@@ -73,20 +67,31 @@ router.get("/:id", getPermisoById);
  *                 type: string
  *     responses:
  *       201:
- *         description: Permiso creado correctamente
- *       400:
- *         description: Datos inválidos
- *       500:
- *         description: Error interno del servidor
+ *         description: Permiso creado correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Permiso creado correctamente.
+ *                 data:
+ *                   type: object
  */
-router.post("/", createPermiso);
+router.post('/', verifyToken, createPermiso);
 
 /**
  * @swagger
  * /api/permisos/{id}:
  *   put:
- *     summary: Actualizar un permiso
+ *     summary: Actualiza un permiso existente
  *     tags: [Permisos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -96,7 +101,6 @@ router.post("/", createPermiso);
  *           type: string
  *     requestBody:
  *       required: true
- *       description: Datos a actualizar del permiso
  *       content:
  *         application/json:
  *           schema:
@@ -108,20 +112,31 @@ router.post("/", createPermiso);
  *                 type: string
  *     responses:
  *       200:
- *         description: Permiso actualizado correctamente
- *       404:
- *         description: Permiso no encontrado
- *       500:
- *         description: Error interno del servidor
+ *         description: Permiso actualizado correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Permiso actualizado correctamente.
+ *                 data:
+ *                   type: object
  */
-router.put("/:id", updatePermiso);
+router.put('/:id', verifyToken, updatePermiso);
 
 /**
  * @swagger
  * /api/permisos/{id}:
  *   delete:
- *     summary: Eliminar un permiso
+ *     summary: Elimina un permiso existente
  *     tags: [Permisos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -131,12 +146,21 @@ router.put("/:id", updatePermiso);
  *           type: string
  *     responses:
  *       200:
- *         description: Permiso eliminado correctamente
- *       404:
- *         description: Permiso no encontrado
- *       500:
- *         description: Error interno del servidor
+ *         description: Permiso eliminado correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Permiso eliminado correctamente.
+ *                 data:
+ *                   type: object
  */
-router.delete("/:id", deletePermiso);
+router.delete('/:id', verifyToken, deletePermiso);
 
 export default router;

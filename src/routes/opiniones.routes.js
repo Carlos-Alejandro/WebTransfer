@@ -1,11 +1,12 @@
-import express from "express";
+// src/routes/opiniones.routes.js
+import express from 'express';
+import { verifyToken } from '../middlewares/auth.middleware.js';
 import {
   getOpiniones,
-  getOpinionById,
   createOpinion,
   updateOpinion,
-  deleteOpinion
-} from "../controllers/opiniones.controller.js";
+  deleteOpinion,
+} from '../controllers/opiniones.controller.js';
 
 const router = express.Router();
 
@@ -13,55 +14,46 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: Opiniones
- *   description: Endpoints para la gestión de opiniones
+ *   description: Endpoints para administrar opiniones
  */
 
 /**
  * @swagger
  * /api/opiniones:
  *   get:
- *     summary: Obtener todas las opiniones
+ *     summary: Obtiene la lista de opiniones
  *     tags: [Opiniones]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Lista de opiniones
- *       500:
- *         description: Error interno del servidor
+ *         description: Opiniones obtenidas correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Opiniones obtenidas correctamente.
+ *                 data:
+ *                   type: array
  */
-router.get("/", getOpiniones);
-
-/**
- * @swagger
- * /api/opiniones/{id}:
- *   get:
- *     summary: Obtener una opinión por ID
- *     tags: [Opiniones]
- *     parameters:
- *       - in: path
- *         name: id
- *         description: ID de la opinión
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Datos de la opinión
- *       404:
- *         description: Opinión no encontrada
- *       500:
- *         description: Error interno del servidor
- */
-router.get("/:id", getOpinionById);
+router.get('/', verifyToken, getOpiniones);
 
 /**
  * @swagger
  * /api/opiniones:
  *   post:
- *     summary: Crear una nueva opinión
+ *     summary: Crea una nueva opinión
  *     tags: [Opiniones]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
- *       description: Datos de la nueva opinión
  *       content:
  *         application/json:
  *           schema:
@@ -77,20 +69,31 @@ router.get("/:id", getOpinionById);
  *                 type: string
  *     responses:
  *       201:
- *         description: Opinión creada correctamente
- *       400:
- *         description: Datos inválidos
- *       500:
- *         description: Error interno del servidor
+ *         description: Opinión creada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Opinión creada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.post("/", createOpinion);
+router.post('/', verifyToken, createOpinion);
 
 /**
  * @swagger
  * /api/opiniones/{id}:
  *   put:
- *     summary: Actualizar una opinión
+ *     summary: Actualiza una opinión existente
  *     tags: [Opiniones]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -100,32 +103,46 @@ router.post("/", createOpinion);
  *           type: string
  *     requestBody:
  *       required: true
- *       description: Datos a actualizar de la opinión
  *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
+ *               reservaId:
+ *                 type: string
+ *               usuarioId:
+ *                 type: string
  *               puntuacion:
  *                 type: integer
  *               comentario:
  *                 type: string
  *     responses:
  *       200:
- *         description: Opinión actualizada correctamente
- *       404:
- *         description: Opinión no encontrada
- *       500:
- *         description: Error interno del servidor
+ *         description: Opinión actualizada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Opinión actualizada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.put("/:id", updateOpinion);
+router.put('/:id', verifyToken, updateOpinion);
 
 /**
  * @swagger
  * /api/opiniones/{id}:
  *   delete:
- *     summary: Eliminar una opinión
+ *     summary: Elimina una opinión existente
  *     tags: [Opiniones]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -135,12 +152,21 @@ router.put("/:id", updateOpinion);
  *           type: string
  *     responses:
  *       200:
- *         description: Opinión eliminada correctamente
- *       404:
- *         description: Opinión no encontrada
- *       500:
- *         description: Error interno del servidor
+ *         description: Opinión eliminada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Opinión eliminada correctamente.
+ *                 data:
+ *                   type: object
  */
-router.delete("/:id", deleteOpinion);
+router.delete('/:id', verifyToken, deleteOpinion);
 
 export default router;
